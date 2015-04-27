@@ -42,6 +42,7 @@ public
 					//wyjeb duplikaty
 					if(this.literaly.remove(literal1) == false) System.out.println("Nie udalo sie utworzyc nowej klauzuli.\n");
 					this.literaly.remove(literal2);
+					
 					break;
 				}
 			}
@@ -49,12 +50,12 @@ public
 		}
 	}
 	boolean czyRowne(Klauzula klauzula){
-		if (klauzula.literaly.size() != literaly.size()) return false;
+		if (klauzula.literaly.size()!= literaly.size()) return false;
 		int check = klauzula.literaly.size();
 		for (Literal literal1 : klauzula.literaly)
 		{
 			for(Literal literal2 : literaly){
-				if (literal1.getNazwa() == literal2.getNazwa() && literal1.getNegacja()==literal2.getNegacja()){
+				if (literal1.getNazwa().equals(literal2.getNazwa()) && literal1.getNegacja()==literal2.getNegacja()){
 					check=check-1;
 					break;
 				}
@@ -69,7 +70,7 @@ public
 		for (Literal literal1 : klauzula.literaly)
 		{
 			for(Literal literal2 : literaly){
-				if (literal1.getNazwa() == literal2.getNazwa() && literal1.getNegacja()!=literal2.getNegacja()){
+				if (literal1.getNazwa().equals( literal2.getNazwa()) && literal1.getNegacja()!=literal2.getNegacja()){
 					check=check-1;
 					break;
 				}

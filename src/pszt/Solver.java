@@ -30,6 +30,9 @@ public class Solver {
 		}
 		void solveWszerz(ArrayList<String> teza){
 			bazaWiedzy.dodajKlauzule(teza);
+
+			bazaWiedzy.czytajDzifko();
+			System.out.println();
 			while(!bazaWiedzy.sprawdzSprzecznosc()){
 				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
 					for (Klauzula klauzula2: bazaWiedzy.getBaza()){
@@ -43,6 +46,7 @@ public class Solver {
 				mikroBaza.clear();
 
 				bazaWiedzy.czytajDzifko();
+				System.out.println();
 			}
 		}
 

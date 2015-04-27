@@ -14,17 +14,10 @@ public
 	Klauzula(List<String> listaLiteralow){
 		literaly = new ArrayList<Literal>();
 		for (String literalString: listaLiteralow){
-			boolean check = true;
-			for(Literal literal: BazaLiteralow.baza){
-				if(literalString.equals(literal.getNazwa())){
-					check = false;
-					literaly.add(literal);
-				}
-			}
-			if(check){
-				BazaLiteralow.baza.add(new Literal(literalString));
-				literaly.add(BazaLiteralow.baza.get(BazaLiteralow.baza.size()-1));
-			}
+			Literal literal = new Literal(literalString);
+			Literal liter = BazaLiteralow.dodajLiteral(literal);
+			if(liter==null)literaly.add(literal);
+			else literaly.add(liter);
 		}
 		
 	}
@@ -65,7 +58,7 @@ public
 		return true;
 	}
 	boolean czySprzeczne(Klauzula klauzula){
-		if (klauzula.literaly.size()!= literaly.size()) return false;
+		if (klauzula.literaly.size()>1 || literaly.size()>1) return false;
 		int check = klauzula.literaly.size();
 		for (Literal literal1 : klauzula.literaly)
 		{

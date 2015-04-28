@@ -55,11 +55,7 @@ public
 	}
 	boolean sprawdzSprzecznosc(){
 		for(Klauzula klauzula1: bazaWiedzy){
-			for (Klauzula klauzula2: bazaWiedzy){
-				if(klauzula1.czySprzeczne(klauzula2)){
-					return true;
-				}
-			}
+			if (klauzula1.czyFalsz())return true;
 			
 		}
 		return false;

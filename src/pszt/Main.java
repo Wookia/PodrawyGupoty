@@ -6,7 +6,7 @@ public class Main {
 	static BazaWiedzy baza = new BazaWiedzy();
 
 	public static void main(String[] args) {
-		test3();
+		test2();
 
 	}
 	static void  test1(){

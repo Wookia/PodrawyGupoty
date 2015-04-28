@@ -30,24 +30,33 @@ public class Solver {
 		}
 		void solveWszerz(ArrayList<String> teza){
 			bazaWiedzy.dodajKlauzule(teza);
-
-			bazaWiedzy.czytajDzifko();
-			System.out.println();
+			Log log = new Log();
+			log.dodajBazê(bazaWiedzy);
+			int i=1;
+			boolean stop = false;
 			while(!bazaWiedzy.sprawdzSprzecznosc()){
 				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
 					for (Klauzula klauzula2: bazaWiedzy.getBaza()){
 						if(czyMerge(klauzula1, klauzula2)){
 							Klauzula klauzula = new Klauzula(klauzula1, klauzula2);
 							mikroBaza.add(klauzula);
+							log.dodajKlauzule(klauzula1, klauzula2, klauzula, i);
+							if(klauzula.czyFalsz()){
+								stop=true;
+								break;
+							}
 						}
 					}
+				if(stop)break;
 				}
+				i=i+1;
 				bazaWiedzy.addMikroBaza(mikroBaza);
 				mikroBaza.clear();
+				if(stop)break;
+				
 
-				bazaWiedzy.czytajDzifko();
-				System.out.println();
 			}
+			log.piszDzifko();
 		}
 
 }

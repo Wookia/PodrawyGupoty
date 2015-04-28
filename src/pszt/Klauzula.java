@@ -76,4 +76,8 @@ public
 	List<Literal> getLiteraly(){
 		return literaly;
 	}
+	boolean czyFalsz(){
+		if (literaly.size()==0)return true;
+		return false;
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 public class Log {
 	private 
 		List<LogKlauzula> log;
+		LogKlauzula teza;
 	public
 	Log(){
 		log = new ArrayList<LogKlauzula>();
@@ -42,6 +43,7 @@ public class Log {
 				System.out.print(")");
 				System.out.print(" => ");
 			}
+			if (logKlauzula.equals(teza))System.out.print("TEZA: ");
 			if (dziecko!=null)piszKlauzule(dziecko);
 			System.out.println("");
 			
@@ -67,5 +69,6 @@ public class Log {
 		for(Klauzula klauzula: baza.getBaza()){
 			dodajKlauzule(klauzula);
 		}
+		this.teza = log.get(log.size()-1);
 	}
 }

@@ -33,6 +33,7 @@ public class Solver {
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy);
 			int i=1;
+			int size = bazaWiedzy.getBaza().size();
 			boolean stop = false;
 			while(!bazaWiedzy.sprawdzSprzecznosc()){
 				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
@@ -54,6 +55,47 @@ public class Solver {
 				mikroBaza.clear();
 				if(stop)break;
 				
+				if(size==bazaWiedzy.getBaza().size()){
+					System.out.println("Teza nieprawdziwa");
+					break;
+				}
+				size=bazaWiedzy.getBaza().size();
+			}
+			log.piszDzifko();
+		}
+		void solveLiniowe(ArrayList<String> teza){
+			bazaWiedzy.dodajKlauzule(teza);
+			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
+			Log log = new Log();
+			log.dodajBazê(bazaWiedzy);
+			int size = bazaWiedzy.getBaza().size();
+			int i=1;
+			boolean stop = false;
+			while(!bazaWiedzy.sprawdzSprzecznosc()){
+				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
+						if(czyMerge(klauzula1, aktualna)){
+							Klauzula klauzula = new Klauzula(klauzula1, aktualna);
+							mikroBaza.add(klauzula);
+							log.dodajKlauzule(klauzula1, aktualna, klauzula, i);
+							aktualna = klauzula;
+							
+							if(klauzula.czyFalsz()){
+								stop=true;
+							}
+							break;
+						
+					}
+				if(stop)break;
+				}
+				i=i+1;
+				bazaWiedzy.addMikroBaza(mikroBaza);
+				mikroBaza.clear();
+				if(stop)break;
+				if(size==bazaWiedzy.getBaza().size()){
+					System.out.println("Teza nieprawdziwa lub zadanie nierozwi¹zywalne t¹ metod¹");
+					break;
+				}
+				size=bazaWiedzy.getBaza().size();
 
 			}
 			log.piszDzifko();

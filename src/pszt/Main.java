@@ -6,10 +6,13 @@ public class Main {
 	static BazaWiedzy baza = new BazaWiedzy();
 
 	public static void main(String[] args) {
-		test2();
+		test1("L");
+		baza.getBaza().clear();
+		test1("W");
+		
 
 	}
-	static void  test1(){
+	static void  test1(String typ){
 		//PRZYK£AD 2
 		ArrayList<String> test = new ArrayList<String>();
 		test.add("A");
@@ -29,10 +32,12 @@ public class Main {
 		test.clear();
 		test.add("!A");
 		Solver solver = new Solver(baza);
-		solver.solveWszerz(test);
+		if(typ.equals("L"))solver.solveLiniowe(test);
+		else if(typ.equals("W"))solver.solveWszerz(test);
+		
 		
 	}
-	static void test2(){
+	static void test2(String typ){
 
 		//PRZYK£AD 1
 		ArrayList<String> test = new ArrayList<String>();
@@ -57,9 +62,10 @@ public class Main {
 		test.add("!R");
 
 		Solver solver = new Solver(baza);
-		solver.solveWszerz(test);
+		if(typ.equals("L"))solver.solveLiniowe(test);
+		else if(typ.equals("W"))solver.solveWszerz(test);
 	}
-	static void test3(){
+	static void test3(String typ){
 		//PRZYK£AD 2
 		ArrayList<String> test = new ArrayList<String>();
 		test.add("!A");
@@ -94,7 +100,8 @@ public class Main {
 		test.clear();
 		test.add("B");
 		Solver solver = new Solver(baza);
-		solver.solveWszerz(test);
+		if(typ.equals("L"))solver.solveLiniowe(test);
+		else if(typ.equals("W"))solver.solveWszerz(test);
 		
 	}
 

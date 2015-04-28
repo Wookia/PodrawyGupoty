@@ -32,12 +32,16 @@ public class Log {
 			Klauzula rodzic1 = logKlauzula.getRodzic1();
 			Klauzula rodzic2 = logKlauzula.getRodzic2();
 			Klauzula dziecko = logKlauzula.getDziecko();
-			System.out.print("(");
-			if (rodzic1!=null)piszKlauzule(rodzic1);
-			System.out.print(" ^ ");
-			if (rodzic2!=null)piszKlauzule(rodzic2);
-			System.out.print(")");
-			System.out.print(" => ");
+			if (rodzic1!=null){
+				System.out.print("(");
+				piszKlauzule(rodzic1);
+				System.out.print("^");
+			}
+			if (rodzic2!=null){
+				piszKlauzule(rodzic2);
+				System.out.print(")");
+				System.out.print(" => ");
+			}
 			if (dziecko!=null)piszKlauzule(dziecko);
 			System.out.println("");
 			
@@ -46,11 +50,15 @@ public class Log {
 	}
 	void piszKlauzule(Klauzula klauzula){
 		System.out.print("(");
+		int max = klauzula.getLiteraly().size()-1;
 		for(Literal literal: klauzula.getLiteraly()){
 			if(literal.getNegacja()){
 				System.out.print("~");
 			}
-			System.out.print(literal.getNazwa()+" ");
+			System.out.print(literal.getNazwa());
+			if(max!=0)System.out.print(" v ");
+			
+			max--;
 		}
 
 		System.out.print(")");

@@ -28,7 +28,7 @@ public class Solver {
 		Solver(BazaWiedzy bazaWiedzy){
 			this.bazaWiedzy = bazaWiedzy;
 		}
-		void solveWszerz(ArrayList<String> teza){
+		Log solveWszerz(ArrayList<String> teza){
 			bazaWiedzy.dodajKlauzule(teza);
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy);
@@ -61,9 +61,9 @@ public class Solver {
 				}
 				size=bazaWiedzy.getBaza().size();
 			}
-			log.piszDzifko();
+			return log;
 		}
-		void solveLiniowe(ArrayList<String> teza){
+		Log solveLiniowe(ArrayList<String> teza){
 			bazaWiedzy.dodajKlauzule(teza);
 			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
 			Log log = new Log();
@@ -98,7 +98,7 @@ public class Solver {
 				size=bazaWiedzy.getBaza().size();
 
 			}
-			log.piszDzifko();
+			return log;
 		}
 
 }

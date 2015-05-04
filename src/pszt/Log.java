@@ -71,4 +71,26 @@ public class Log {
 		}
 		this.teza = log.get(log.size()-1);
 	}
+	ArrayList<Integer> iloscKlauzulNaIteracje(){
+		int n=0;
+		ArrayList<Integer> wynik = new ArrayList<Integer>();
+		for(LogKlauzula klauzula: log){
+			int numerIter = klauzula.getIter();
+			int rozmiar = wynik.size();
+			if(numerIter>=rozmiar){
+				for(int i=0;i<=numerIter-rozmiar;i++){
+					wynik.add(0);
+				}
+			}
+			wynik.set(numerIter, wynik.get(numerIter)+1);
+		}
+		return wynik;
+	}
+	List<LogKlauzula> getLog(){
+		return log;
+	}
+	boolean czyTeza(LogKlauzula klauzula){
+		if(teza.equals(klauzula))return true;
+		return false;
+	}
 }

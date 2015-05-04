@@ -80,4 +80,14 @@ public
 		if (literaly.size()==0)return true;
 		return false;
 	}
+	String getNazwa(){
+		String nazwa = "(";
+		for(Literal literal: literaly){
+			if (literal.getNegacja())nazwa=nazwa+"~";
+			nazwa=nazwa+literal.getNazwa();
+			if(literaly.size()-1!=literaly.indexOf(literal))nazwa=nazwa+"v";
+		}
+		nazwa=nazwa+")";
+		return nazwa;
+	}
 }

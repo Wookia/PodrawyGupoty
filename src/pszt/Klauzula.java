@@ -32,7 +32,6 @@ public
 					znaleziony = true;
 					this.literaly.addAll(K1.literaly);
 					this.literaly.addAll(K2.literaly);
-					//wyjeb duplikaty
 					if(this.literaly.remove(literal1) == false) System.out.println("Nie udalo sie utworzyc nowej klauzuli.\n");
 					this.literaly.remove(literal2);
 					
@@ -48,7 +47,11 @@ public
 		for (Literal literal1 : klauzula.literaly)
 		{
 			for(Literal literal2 : literaly){
-				if (literal1.getNazwa().equals(literal2.getNazwa()) && literal1.getNegacja()==literal2.getNegacja()){
+				
+				//dodane sprawdzanie argumentów!!! do przetestowania
+				
+				if (literal1.getNazwa().equals(literal2.getNazwa()) && literal1.getNegacja()==literal2.getNegacja() && 
+						Literal.sprawdzArgumenty(literal1, literal2)){
 					check=check-1;
 					break;
 				}
@@ -63,6 +66,10 @@ public
 		for (Literal literal1 : klauzula.literaly)
 		{
 			for(Literal literal2 : literaly){
+				
+				//TODO
+				//dodaæ sprawdzanie argumentów!!!
+				
 				if (literal1.getNazwa().equals( literal2.getNazwa()) && literal1.getNegacja()!=literal2.getNegacja()){
 					check=check-1;
 					break;

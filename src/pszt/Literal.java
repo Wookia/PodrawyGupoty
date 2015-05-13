@@ -49,4 +49,10 @@ public
 		if(licznik == rozmiar) return true;
 		else return false;
 	}
+	
+	static void podstaw(Literal literal1, Literal literal2)
+	{
+		
+		return;
+	}
 }

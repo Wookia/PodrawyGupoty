@@ -21,6 +21,14 @@ public
 		}
 		
 	}
+	
+	//konstruktor kopiujacy
+	Klauzula(Klauzula K1)
+	{
+		literaly = new ArrayList<Literal>();
+		this.literaly.addAll(K1.literaly);
+	}
+	
 	Klauzula(Klauzula K1, Klauzula K2){
 		literaly = new ArrayList<Literal>();
 		for (Literal literal1 : K1.literaly){
@@ -80,6 +88,32 @@ public
 		return true;
 		
 	}
+	
+	static Klauzula wykonajPodstawienie(Klauzula klauzula1, Klauzula klauzula2)
+	{
+		Klauzula wynik, tmp1, tmp2;
+		boolean wykonano = false;
+		tmp1 = new Klauzula(klauzula1);
+		tmp2 = new Klauzula(klauzula2);
+		
+		for (Literal literal1: tmp1.getLiteraly()){
+			for(Literal literal2: tmp2.getLiteraly()){
+				
+				if(literal1.getNazwa().equals((literal2).getNazwa()) && literal1.getNegacja()!=literal2.getNegacja() && 
+						!Literal.sprawdzArgumenty(literal1,literal2))
+					{
+						Literal.podstaw(literal1, literal2);
+						wykonano = true;
+						break;
+					}
+			}
+			if(wykonano) break;
+		}
+		wynik = new Klauzula(tmp1, tmp2);
+		return wynik;
+	}
+	
+	
 	List<Literal> getLiteraly(){
 		return literaly;
 	}

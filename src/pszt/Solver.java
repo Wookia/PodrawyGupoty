@@ -57,6 +57,13 @@ public class Solver {
 								break;
 							}
 						}
+						else if(czyMerge(klauzula1, klauzula2) == 2){
+							
+							
+							// do zrobienia wstawienie podstawionej klauzuli
+							
+							
+						}
 					}
 				if(stop)break;
 				}
@@ -94,7 +101,7 @@ public class Solver {
 							}
 							break;
 						
-					}
+						}
 				if(stop)break;
 				}
 				i=i+1;

@@ -19,6 +19,7 @@ public class Main extends Application{
 	static Scene scene;
 	static final Pane pane  = new Pane();;
 	public void start(Stage primaryStage) {
+			testPodstawien();
 			stage = primaryStage;
 		 	primaryStage.setTitle("Podstawy g³upoty");
 	        scene = new Scene(pane, 300, 250);
@@ -65,7 +66,7 @@ public class Main extends Application{
 	        stage.show();
 	}
 	public static void main(String[] args) {
-
+		
 		launch(args);
 
 	}
@@ -208,6 +209,40 @@ public class Main extends Application{
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
+		
+	}
+	
+	static void testPodstawien()
+	{
+		ArrayList<Literal> K1 = new ArrayList<Literal>();
+		ArrayList<Literal> K2 = new ArrayList<Literal>();
+		
+		K1.add(new Literal("A"));
+		K1.get(0).setNegacja(false);
+		K1.get(0).getArgumenty().add(new Literal("a"));
+		K1.get(0).getArgumenty().add(new Literal("b"));
+		K1.get(0).getArgumenty().add(new Literal("c"));
+		K1.get(0).getArgumenty().get(0).setStala(false);
+		K1.get(0).getArgumenty().get(1).setStala(false);
+		K1.get(0).getArgumenty().get(2).setStala(false);
+		
+		K2.add(new Literal("A"));
+		K2.get(0).setNegacja(true);
+		K2.get(0).getArgumenty().add(new Literal("d"));
+		K2.get(0).getArgumenty().add(new Literal("b"));
+		K2.get(0).getArgumenty().add(new Literal("f"));
+		K2.get(0).getArgumenty().get(0).setStala(false);
+		K2.get(0).getArgumenty().get(1).setStala(false);
+		K2.get(0).getArgumenty().get(2).setStala(false);
+		
+		Klauzula klauz1 = new Klauzula();
+		Klauzula klauz2 = new Klauzula();
+		
+		klauz1.getLiteraly().addAll(K1);
+		klauz2.getLiteraly().addAll(K2);
+		
+		Klauzula.wykonajPodstawienie(klauz1, klauz2);
+		
 		
 	}
 

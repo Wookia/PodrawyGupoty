@@ -12,6 +12,9 @@ private
 	boolean stala=true;
 	String nazwa;
 public
+	Literal(){
+		argumenty = new ArrayList<Literal>();
+	}
 	Literal(String literalString){
 	//uwzglednic stale/zmienne
 		if(literalString.startsWith("!")){
@@ -28,13 +31,28 @@ public
 		this.negacja = literal.negacja;
 		this.stala = literal.stala;
 		this.nazwa = new String(literal.nazwa);	//zeby nie przypisywac referencji
-		this.argumenty.addAll(literal.argumenty);
+		this.argumenty = new ArrayList<Literal>();
+		
+		for(Literal l: literal.argumenty)
+		{
+			Literal nowy = new Literal(l.nazwa);
+			nowy.stala = l.stala;
+			this.argumenty.add(nowy);
+		}
 	}
 	String getNazwa(){
 		return nazwa;
 	}
 	boolean getNegacja(){
 		return negacja;
+	}
+	
+	void setNegacja(boolean a){
+		negacja = a;
+	}
+	
+	void setStala(boolean a){
+		stala = a;
 	}
 	List<Literal> getArgumenty(){
 		return argumenty;
@@ -66,10 +84,14 @@ public
 	{
 		ArrayList<Integer> paryZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych mozemy zrobic podstawienia
 		ArrayList<Integer> paryRozne = new ArrayList<Integer>();
+		ArrayList<Integer> podstawieniaZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych wykonalismy podstawienia
+		ArrayList<Integer> podstawieniaPar = new ArrayList<Integer>();
+		
 		Literal tmpLiteral1 = new Literal(literal1);	//tworze kopie dla bezpieczenstwa oryginalnych danych
 		Literal tmpLiteral2 = new Literal(literal2);
 		
-		
+		boolean sukcesPodstawienia = false;
+	
 		for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych lub par stala/zmienna
 		{
 			if((tmpLiteral1.getArgumenty().get(i).stala == tmpLiteral2.getArgumenty().get(i).stala) && 
@@ -83,17 +105,34 @@ public
 				paryRozne.add(i);
 		}
 		
-		/*REKURENCJA, DODAC METODY KORZYSTAJACE Z REKURENCJI
+
+		for(int i = 0; i < paryZmiennych.size(); i++)
+		{
+			
+			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
+			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
+			
+			tmp2.nazwa = new String(tmp1.nazwa);
+			
+		}	
 		
-		wykonac dla kazdej kombinacji podstawien przy parach zmiennych podstawienie jednej za druga
-		jesli nigdzie nie wyjdzie fajne podstawienie, to dorzucic jeszcze podstawianie stalej za zmienna
-		ale przy podstawianiu stalej za zmienna wykonywac to az do powrotu rekurencji, aby okreslic
-		podstawienie, ktore podstawia jak najmniej stalych (najbardziej ogolne)
+		if(sprawdzArgumenty(tmpLiteral1, tmpLiteral2))
+			sukcesPodstawienia = true;
+		
+		System.out.println("K1 przed podstawieniem:");
+		for(Literal l: literal1.argumenty)
+			System.out.println(l.nazwa);
+		System.out.println("K2 przed podstawieniem:");
+		for(Literal l: literal2.argumenty)
+			System.out.println(l.nazwa);
+		System.out.println("K1 po podstawieniu:");
+		for(Literal l: tmpLiteral1.argumenty)
+			System.out.println(l.nazwa);
+		System.out.println("K2 po podstawieniu:");
+		for(Literal l: tmpLiteral2.argumenty)
+			System.out.println(l.nazwa);
 		
 		
-		w skrocie - przy drugiej turze, czyli patrzeniu tez na stale, zapamietywac wszystkie podstawienia stalych
-		podstawienia zmiennych zapamietujemy tylko ostateczne, aby "poprawic" potem cale listy literalow
-		*/
-		return false;
+		return sukcesPodstawienia;
 	}
 }

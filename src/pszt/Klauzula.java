@@ -26,7 +26,19 @@ public
 	Klauzula(Klauzula K1)
 	{
 		literaly = new ArrayList<Literal>();
-		this.literaly.addAll(K1.literaly);
+		for(Literal l: K1.literaly)
+		{
+			int i = 0;
+			Literal nowy = new Literal(l.nazwa);
+			nowy.stala = l.stala;
+			nowy.negacja = l.negacja;
+			this.literaly = new ArrayList<Literal>();
+			this.literaly.add(nowy);
+			
+			for(Literal argument: l.getArgumenty())
+				this.literaly.get(i).getArgumenty().add(new Literal(argument));
+			i++;
+		}
 	}
 	
 	Klauzula(Klauzula K1, Klauzula K2){
@@ -42,7 +54,6 @@ public
 					this.literaly.addAll(K2.literaly);
 					if(this.literaly.remove(literal1) == false) System.out.println("Nie udalo sie utworzyc nowej klauzuli.\n");
 					this.literaly.remove(literal2);
-					
 					break;
 				}
 			}
@@ -94,13 +105,14 @@ public
 		tmp1 = new Klauzula(klauzula1);
 		tmp2 = new Klauzula(klauzula2);
 		
+		
+		
 		for (Literal literal1: tmp1.getLiteraly()){
 			for(Literal literal2: tmp2.getLiteraly()){
-				
 				if(literal1.getNazwa().equals((literal2).getNazwa()) && literal1.getNegacja()!=literal2.getNegacja() && 
 						!Literal.sprawdzArgumenty(literal1,literal2))
 					{
-						if(Literal.podstaw(literal1, literal2, tmp1.getLiteraly(), tmp2.getLiteraly()) == false)
+						if(!Literal.podstaw(literal1, literal2, tmp1.getLiteraly(), tmp2.getLiteraly()))
 							continue;	//nie udalo sie wykonac podstawienia dla danych literalow, patrzymy dalej
 						wykonano = true;
 						break;

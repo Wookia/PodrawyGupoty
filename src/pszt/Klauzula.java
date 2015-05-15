@@ -75,10 +75,8 @@ public
 		{
 			for(Literal literal2 : literaly){
 				
-				//TODO
-				//dodaæ sprawdzanie argumentów!!!
-				
-				if (literal1.getNazwa().equals( literal2.getNazwa()) && literal1.getNegacja()!=literal2.getNegacja()){
+				if (literal1.getNazwa().equals( literal2.getNazwa()) && literal1.getNegacja()!=literal2.getNegacja() && 
+						Literal.sprawdzArgumenty(literal1, literal2)){
 					check=check-1;
 					break;
 				}
@@ -102,13 +100,15 @@ public
 				if(literal1.getNazwa().equals((literal2).getNazwa()) && literal1.getNegacja()!=literal2.getNegacja() && 
 						!Literal.sprawdzArgumenty(literal1,literal2))
 					{
-						Literal.podstaw(literal1, literal2);
+						if(Literal.podstaw(literal1, literal2, tmp1.getLiteraly(), tmp2.getLiteraly()) == false)
+							continue;	//nie udalo sie wykonac podstawienia dla danych literalow, patrzymy dalej
 						wykonano = true;
 						break;
 					}
 			}
 			if(wykonano) break;
 		}
+		if(!wykonano) return null;
 		wynik = new Klauzula(tmp1, tmp2);
 		return wynik;
 	}

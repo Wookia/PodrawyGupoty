@@ -61,7 +61,7 @@ public class Solver {
 							
 							
 							// do zrobienia wstawienie podstawionej klauzuli
-							
+							//pamietac, ze Klauzula.wykonajPodstawienie() zwraca tez nulla!
 							
 						}
 					}

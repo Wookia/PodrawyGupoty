@@ -80,12 +80,13 @@ public
 		else return false;
 	}
 	
-	static boolean podstaw(Literal literal1, Literal literal2, List<Literal> listaLiteralow1, List<Literal> listaLiteralow2)
-	{
+	static boolean podstaw(Literal literal1, Literal literal2, List<Literal> listaLiteralow1, List<Literal> listaLiteralow2){
 		ArrayList<Integer> paryZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych mozemy zrobic podstawienia
 		ArrayList<Integer> paryRozne = new ArrayList<Integer>();
-		ArrayList<Integer> podstawieniaZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych wykonalismy podstawienia
-		ArrayList<Integer> podstawieniaPar = new ArrayList<Integer>();
+		ArrayList<String> argUsuniete1 = new ArrayList<String>();	//jakie argumenty wyrzucilismy z pierwszej klauzuli
+		ArrayList<String> argDodane1 = new ArrayList<String>();	//jakie argumenty dodalismy do pierwszej klauzuli
+		ArrayList<String> argUsuniete2 = new ArrayList<String>();
+		ArrayList<String> argDodane2 = new ArrayList<String>();
 		
 		Literal tmpLiteral1 = new Literal(literal1);	//tworze kopie dla bezpieczenstwa oryginalnych danych
 		Literal tmpLiteral2 = new Literal(literal2);
@@ -106,18 +107,38 @@ public
 		}
 		
 
-		for(int i = 0; i < paryZmiennych.size(); i++)
-		{
+		for(int i = 0; i < paryZmiennych.size(); i++){
 			
 			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
 			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
 			
+			argDodane2.add(new String(tmp1.nazwa));
+			argUsuniete2.add(new String(tmp2.nazwa));
 			tmp2.nazwa = new String(tmp1.nazwa);
 			
 		}	
 		
-		if(sprawdzArgumenty(tmpLiteral1, tmpLiteral2))
-			sukcesPodstawienia = true;
+		for(int i = 0; i < paryRozne.size(); i++){
+			
+			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryRozne.get(i));
+			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryRozne.get(i));
+			
+			if(tmp2.stala){
+				argDodane1.add(new String(tmp2.nazwa));
+				argUsuniete1.add(new String(tmp1.nazwa));
+				tmp1.stala = true;
+				tmp1.nazwa = new String(tmp2.nazwa);
+				
+			}
+			else{
+				argDodane2.add(new String(tmp1.nazwa));
+				argUsuniete2.add(new String(tmp2.nazwa));
+				tmp2.stala = true;
+				tmp2.nazwa = new String(tmp1.nazwa);
+				
+			}
+			
+		}	
 		
 		System.out.println("K1 przed podstawieniem:");
 		for(Literal l: literal1.argumenty)
@@ -132,7 +153,51 @@ public
 		for(Literal l: tmpLiteral2.argumenty)
 			System.out.println(l.nazwa);
 		
+		System.out.println("Dodane do K1:");
+		System.out.println(argDodane1);
+		System.out.println("Usuniete z K1:");
+		System.out.println(argUsuniete1);
+		System.out.println("Dodane do K2:");
+		System.out.println(argDodane2);
+		System.out.println("Usuniete z K2:");
+		System.out.println(argUsuniete2);
 		
+		if(sprawdzArgumenty(tmpLiteral1, tmpLiteral2)){
+			sukcesPodstawienia = true;
+			literal1 = tmpLiteral1;
+			literal2 = tmpLiteral2;
+			for(Literal l: listaLiteralow1)
+			{
+				for(Literal arg: l.argumenty)
+				{	
+					int i = 0;
+					for(String nazwaUsunietego: argUsuniete1)
+					{
+						if(arg.nazwa.equals(nazwaUsunietego))
+						{
+							arg.nazwa = new String(argDodane1.get(i));
+						}
+					}
+					i++;
+				}
+			}
+			
+			for(Literal l: listaLiteralow2)
+			{
+				for(Literal arg: l.argumenty)
+				{	
+					int i = 0;
+					for(String nazwaUsunietego: argUsuniete2)
+					{
+						if(arg.nazwa.equals(nazwaUsunietego))
+						{
+							arg.nazwa = new String(argDodane2.get(i));
+						}
+					}
+					i++;
+				}
+			}
+		}
 		return sukcesPodstawienia;
 	}
 }

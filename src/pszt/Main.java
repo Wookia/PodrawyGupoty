@@ -230,10 +230,10 @@ public class Main extends Application{
 		K2.get(0).setNegacja(true);
 		K2.get(0).getArgumenty().add(new Literal("d"));
 		K2.get(0).getArgumenty().add(new Literal("b"));
-		K2.get(0).getArgumenty().add(new Literal("f"));
+		K2.get(0).getArgumenty().add(new Literal("StalaF"));
 		K2.get(0).getArgumenty().get(0).setStala(false);
 		K2.get(0).getArgumenty().get(1).setStala(false);
-		K2.get(0).getArgumenty().get(2).setStala(false);
+		K2.get(0).getArgumenty().get(2).setStala(true);
 		
 		Klauzula klauz1 = new Klauzula();
 		Klauzula klauz2 = new Klauzula();

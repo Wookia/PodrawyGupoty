@@ -20,6 +20,7 @@ public class Main extends Application{
 	static final Pane pane  = new Pane();;
 	public void start(Stage primaryStage) {
 			testPodstawien();
+			testZbioruUzasadnien();
 			stage = primaryStage;
 		 	primaryStage.setTitle("Podstawy g³upoty");
 	        scene = new Scene(pane, 300, 250);
@@ -242,8 +243,29 @@ public class Main extends Application{
 		klauz2.getLiteraly().addAll(K2);
 		
 		Klauzula.wykonajPodstawienie(klauz1, klauz2);
+	}
+	
+	static void testZbioruUzasadnien()
+	{
+		ArrayList<String> test = new ArrayList<String>();
+		test.add("A");
+		test.add("B");
+		baza.dodajKlauzule(test);
+		test.clear();
+		test.add("!B");
+		test.add("C");
 		
-		
+		baza.dodajKlauzule(test);
+		test.clear();
+		test.add("!C");
+		test.add("A");
+
+		//teza
+		baza.dodajKlauzule(test);
+		test.clear();
+		test.add("!A");
+		Solver solver = new Solver(baza);
+		solver.solveZbiorUzasadnien(test);
 	}
 
 }

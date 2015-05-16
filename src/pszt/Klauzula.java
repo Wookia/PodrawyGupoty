@@ -123,6 +123,8 @@ public
 			}
 			if(wykonano) break;
 		}
+		if(!wykonano) return null;
+		
 		wynik = new Klauzula(tmp1, tmp2);
 		return wynik;
 	}

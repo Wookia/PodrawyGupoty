@@ -102,6 +102,12 @@ public class Solver {
 							break;
 						
 						}
+						else if(czyMerge(klauzula1, aktualna) == 2)
+						{
+							
+							// do zrobienia wstawienie podstawionej klauzuli
+							
+						}
 				if(stop)break;
 				}
 				i=i+1;
@@ -115,6 +121,72 @@ public class Solver {
 				size=bazaWiedzy.getBaza().size();
 
 			}
+			return log;
+		}
+		
+		Log solveZbiorUzasadnien(ArrayList<String> Teza)
+		{
+			boolean stop = false;
+			Log log = new Log();
+			BazaWiedzy zbiorUzasadnien = new BazaWiedzy();
+			zbiorUzasadnien.dodajKlauzule(Teza);
+			
+			//dodac test na spelnialnosc bazy wiedzy, bo przy niespelnialnej sie wywali
+			
+			while(!bazaWiedzy.sprawdzSprzecznosc())
+			{
+				for (Klauzula klauzula1: bazaWiedzy.getBaza())
+				{
+					for(Klauzula klauzula2: zbiorUzasadnien.getBaza())
+					{
+						if(czyMerge(klauzula1, klauzula2) == 1)
+						{
+							Klauzula klauzula = new Klauzula(klauzula1, klauzula2);
+							if(klauzula.czyFalsz())
+							{
+								stop=true;
+								mikroBaza.add(klauzula);
+								break;
+							}
+							else
+								mikroBaza.add(klauzula);
+							
+						}
+						else if(czyMerge(klauzula1, klauzula2) == 2)
+						{
+							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
+							if(klauzula != null)
+							{
+								if(klauzula.czyFalsz())
+								{
+									stop=true;
+									mikroBaza.add(klauzula);
+									break;
+								}
+								else
+									mikroBaza.add(klauzula);
+							}
+						}
+					}
+					if (stop) break;
+				}
+				
+				bazaWiedzy.addMikroBaza(mikroBaza);
+				zbiorUzasadnien.addMikroBaza(mikroBaza);
+				mikroBaza.clear();
+			}
+			
+			System.out.println("Klauzule wchodzace w sklad zbioru uzasadnien:");
+			for(Klauzula k: zbiorUzasadnien.getBaza())
+			{
+				System.out.println("Klauzula:");
+				for(Literal l: k.getLiteraly())
+				{
+					System.out.println(l.negacja + l.nazwa);
+				}
+				System.out.println("");
+			}
+
 			return log;
 		}
 

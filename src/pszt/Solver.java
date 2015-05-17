@@ -127,11 +127,11 @@ public class Solver {
 		Log solveZbiorUzasadnien(ArrayList<String> Teza)
 		{
 			boolean stop = false;
+			boolean niemozliwyDowod = false;
 			Log log = new Log();
 			BazaWiedzy zbiorUzasadnien = new BazaWiedzy();
 			zbiorUzasadnien.dodajKlauzule(Teza);
-			
-			//dodac test na spelnialnosc bazy wiedzy, bo przy niespelnialnej sie wywali
+			bazaWiedzy.dodajKlauzule(Teza);
 			
 			while(!bazaWiedzy.sprawdzSprzecznosc())
 			{
@@ -171,10 +171,17 @@ public class Solver {
 					if (stop) break;
 				}
 				
+				if(mikroBaza.size() == 0)
+				{
+					niemozliwyDowod = true;
+					break;
+				}
 				bazaWiedzy.addMikroBaza(mikroBaza);
 				zbiorUzasadnien.addMikroBaza(mikroBaza);
 				mikroBaza.clear();
 			}
+			if(niemozliwyDowod)
+				System.out.println("Teza nieprawdziwa.");
 			
 			System.out.println("Klauzule wchodzace w sklad zbioru uzasadnien:");
 			for(Klauzula k: zbiorUzasadnien.getBaza())

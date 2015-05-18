@@ -41,7 +41,7 @@ public class Solver {
 		Log solveWszerz(ArrayList<String> teza){
 			bazaWiedzy.dodajKlauzule(teza);
 			Log log = new Log();
-			log.dodajBazê(bazaWiedzy);
+			log.dodajBazê(bazaWiedzy, false);
 			int i=1;
 			int size = bazaWiedzy.getBaza().size();
 			boolean stop = false;
@@ -51,7 +51,7 @@ public class Solver {
 						if(czyMerge(klauzula1, klauzula2) == 1){
 							Klauzula klauzula = new Klauzula(klauzula1, klauzula2);
 							mikroBaza.add(klauzula);
-							log.dodajKlauzule(klauzula1, klauzula2, klauzula, i);
+							log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, false);
 							if(klauzula.czyFalsz()){
 								stop=true;
 								break;
@@ -84,7 +84,7 @@ public class Solver {
 			bazaWiedzy.dodajKlauzule(teza);
 			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
 			Log log = new Log();
-			log.dodajBazê(bazaWiedzy);
+			log.dodajBazê(bazaWiedzy, false);
 			int size = bazaWiedzy.getBaza().size();
 			int i=1;
 			boolean stop = false;
@@ -93,7 +93,7 @@ public class Solver {
 						if(czyMerge(klauzula1, aktualna) == 1){
 							Klauzula klauzula = new Klauzula(klauzula1, aktualna);
 							mikroBaza.add(klauzula);
-							log.dodajKlauzule(klauzula1, aktualna, klauzula, i);
+							log.dodajKlauzule(klauzula1, aktualna, klauzula, i, false);
 							aktualna = klauzula;
 							
 							if(klauzula.czyFalsz()){
@@ -125,14 +125,16 @@ public class Solver {
 		}
 		
 		Log solveZbiorUzasadnien(ArrayList<String> Teza)
-		{
+		{	
+			Log log = new Log();
+			log.dodajBazê(bazaWiedzy, true);
+			bazaWiedzy.dodajKlauzule(Teza);
+			log.dodajKlauzule(bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1), true);
 			boolean stop = false;
 			boolean niemozliwyDowod = false;
-			Log log = new Log();
 			BazaWiedzy zbiorUzasadnien = new BazaWiedzy();
 			zbiorUzasadnien.dodajKlauzule(Teza);
-			bazaWiedzy.dodajKlauzule(Teza);
-			
+			int i=1;
 			while(!bazaWiedzy.sprawdzSprzecznosc())
 			{
 				for (Klauzula klauzula1: bazaWiedzy.getBaza())
@@ -146,10 +148,14 @@ public class Solver {
 							{
 								stop=true;
 								mikroBaza.add(klauzula);
+								log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, true);
+								
 								break;
 							}
-							else
+							else{
 								mikroBaza.add(klauzula);
+								log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, true);
+							}
 							
 						}
 						else if(czyMerge(klauzula1, klauzula2) == 2)
@@ -161,16 +167,20 @@ public class Solver {
 								{
 									stop=true;
 									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, true);
 									break;
 								}
-								else
+								else{
 									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, true);
+								}
 							}
 						}
 					}
 					if (stop) break;
 				}
-				
+
+				i=i+1;
 				if(mikroBaza.size() == 0)
 				{
 					niemozliwyDowod = true;

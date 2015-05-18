@@ -6,13 +6,13 @@ import java.util.List;
 public class Log {
 	private 
 		List<LogKlauzula> log;
-		LogKlauzula teza;
+		LogKlauzula teza=null;
 	public
 	Log(){
 		log = new ArrayList<LogKlauzula>();
 	}
-	void dodajKlauzule(Klauzula dziecko){
-		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(dziecko));
+	void dodajKlauzule(Klauzula dziecko, boolean uzasad){
+		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(dziecko, uzasad));
 	}
 	boolean czyIstniejeDziecko(Klauzula dziecko){
 		for(LogKlauzula logKlauzula: log){
@@ -20,8 +20,8 @@ public class Log {
 		}
 		return false;
 	}
-	void dodajKlauzule(Klauzula rodzic1, Klauzula rodzic2, Klauzula dziecko, int iteracja){
-		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(rodzic1, rodzic2, dziecko, iteracja));
+	void dodajKlauzule(Klauzula rodzic1, Klauzula rodzic2, Klauzula dziecko, int iteracja, boolean uzasad){
+		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(rodzic1, rodzic2, dziecko, iteracja, uzasad));
 	}
 	void piszDzifko(){
 		int i=-1;
@@ -65,11 +65,12 @@ public class Log {
 
 		System.out.print(")");
 	}
-	void dodajBazê(BazaWiedzy baza){
+	void dodajBazê(BazaWiedzy baza, boolean zbior){
 		for(Klauzula klauzula: baza.getBaza()){
-			dodajKlauzule(klauzula);
+			dodajKlauzule(klauzula, false);
 		}
-		this.teza = log.get(log.size()-1);
+		if(!zbior)this.teza = log.get(log.size()-1);
+		else this.teza=null;
 	}
 	ArrayList<Integer> iloscKlauzulNaIteracje(){
 		int n=0;
@@ -90,7 +91,35 @@ public class Log {
 		return log;
 	}
 	boolean czyTeza(LogKlauzula klauzula){
-		if(teza.equals(klauzula))return true;
+		if(teza!=null && teza.equals(klauzula))return true;
 		return false;
+	}
+	boolean czyUzasadnienie(Klauzula klauzula){
+		for(LogKlauzula klauz: log){
+			if(klauz.getDziecko().czyRowne(klauzula) && klauz.czyUzasadnien)return true;
+		}
+		return false;
+	}
+	
+	ArrayList<Integer> dlugoscKlauzulNaIteracje(){
+		ArrayList<Integer> wynik = new ArrayList<Integer>();
+		for(LogKlauzula klauzula: log){
+			int numerIter = klauzula.getIter();
+			int rozmiar = wynik.size();
+			if(numerIter>=rozmiar){
+				for(int i=0;i<=numerIter-rozmiar;i++){
+					wynik.add(0);
+				}
+			}
+			wynik.set(numerIter, wynik.get(numerIter)+klauzula.getDziecko().getNazwa().length());
+		}
+		return wynik;
+	}
+	int maxWidth(){
+		int max=0;
+		for(Integer i: dlugoscKlauzulNaIteracje()){
+			if (i>max)max=i;
+		}
+		return max;
 	}
 }

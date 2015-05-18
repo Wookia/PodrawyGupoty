@@ -33,6 +33,7 @@ public class Graf {
 		int iloscIter = 0;
 		int maxIloscKlauzul = 0;
 		ArrayList<Integer> iloscIteracji = log.iloscKlauzulNaIteracje();
+		ArrayList<Integer> dlugoscKlauzul = log.dlugoscKlauzulNaIteracje();
 		for(Integer i:iloscIteracji){
 			if(maxIloscKlauzul<i)maxIloscKlauzul=i;
 			iloscIter++;
@@ -40,51 +41,55 @@ public class Graf {
 		stage.setHeight(iloscIter*100);
 		stage.setWidth(maxIloscKlauzul*80);
 		pane.getChildren().clear();
-		final ArrayList<Button> listaKlauzul = new ArrayList<Button>();
-		final ArrayList<Pair<Integer, Line>> mapaLinii =  new ArrayList<Pair<Integer, Line>>();
-		for(int i = 0; i<=iloscIter; i++){
+		final ArrayList<GrafButton> listaKlauzul = new ArrayList<GrafButton>();
+		final ArrayList<Pair<Integer, GrafLine>> mapaLinii =  new ArrayList<Pair<Integer, GrafLine>>();
+		double max=log.maxWidth()*12+10*maxIloscKlauzul+100;
+		stage.setWidth(max);
+		for(int i = 0; i<iloscIter; i++){
 			Text iter = new Text();
 			iter.setText("n = " + i);
 			iter.setTranslateX(5);
 			iter.setTranslateY(10+i*100);
 			pane.getChildren().add(iter);
-			int powt = 1;
 			double last=100;
+			double kon= (max-100-dlugoscKlauzul.get(i)*12)/iloscIteracji.get(i);
 			for(LogKlauzula klauzula: log.getLog()){
 				if(klauzula.getIter()==i){
-					final Button klauz = new Button();
-					if(log.czyTeza(klauzula))klauz.setTextFill(Color.GREEN);
-					else klauz.setTextFill(Color.RED);
+					final GrafButton klauz = new GrafButton();
+					if(log.czyTeza(klauzula))klauz.setKolor(Color.BLUE);
+					else if(klauzula.czyUzasadnien){
+						klauz.setStyle("-fx-base: #b6e7c9;");
+					}
 					klauz.setText(klauzula.getDziecko().getNazwa());
 					klauz.setMinHeight(20);
 					klauz.setMinWidth(10*klauz.getText().length());
-					klauz.setTranslateX(last+10);
+					klauz.setTranslateX(last);
 					klauz.setTranslateY(i*100);
 					final Klauzula rodzic1 = klauzula.getRodzic1();
 					final Klauzula rodzic2 = klauzula.getRodzic2();
 					klauz.setOnAction(new EventHandler<ActionEvent>() {
 			            @Override
 			            public void handle(ActionEvent event) {
-			        		for(Button button: listaKlauzul){
-			        			button.setTextFill(Color.RED);
+			        		for(GrafButton button: listaKlauzul){
+			        			button.odswietl();
 			        		}
-			        		klauz.setTextFill(Color.BLUEVIOLET);
+			        		klauz.podswietl();
 
-			        		for(Pair<Integer, Line> pair: mapaLinii){
+			        		for(Pair<Integer, GrafLine> pair: mapaLinii){
 			        			if(pair.getKey().equals(listaKlauzul.indexOf(klauz))){
-			        				pair.getValue().setStroke(Color.BLUEVIOLET);
+			        				pair.getValue().podswietl();
 			        			}
-			        			else pair.getValue().setStroke(Color.RED);
+			        			else pair.getValue().odswietl();
 			        		}
 			        		
 							if(rodzic1!=null && rodzic2!=null){
 
-								for(Button text: listaKlauzul){
+								for(GrafButton text: listaKlauzul){
 									if(rodzic1.getNazwa().equals(text.getText())){
-										text.setTextFill(Color.BLUEVIOLET);
+										text.podswietl();
 									}
 									if(rodzic2.getNazwa().equals(text.getText())){
-										text.setTextFill(Color.BLUEVIOLET);
+										text.podswietl();
 									}
 								}
 							
@@ -92,44 +97,41 @@ public class Graf {
 			        		
 			            }
 			        });
-					last = last+klauz.getMinWidth()+10;
+					last = last + klauz.getText().length()*10 + kon;
 					listaKlauzul.add(klauz);
 					if(rodzic1!=null && rodzic2!=null){
 						boolean check = false;
-						for(Button text: listaKlauzul){
+						for(GrafButton text: listaKlauzul){
 							if(rodzic1.getNazwa().equals(text.getText())){
 								scene.snapshot(null);
-								Line line = new Line(klauz.getTranslateX()+klauz.getMinWidth()/2, klauz.getTranslateY(),
+								GrafLine line = new GrafLine(klauz.getTranslateX()+klauz.getMinWidth()/2, klauz.getTranslateY(),
 										text.getTranslateX()+text.getMinWidth()/2, text.getTranslateY()+text.getMinHeight());
-								line.setStroke(Color.RED);
-								
+
 								pane.getChildren().add(line);
-								mapaLinii.add(new Pair<Integer, Line>(listaKlauzul.indexOf(klauz), line));
+								mapaLinii.add(new Pair<Integer, GrafLine>(listaKlauzul.indexOf(klauz), line));
 								
 								if(check)break;
 								check=true;
 							}
 							else if(rodzic2.getNazwa().equals(text.getText())){
 								scene.snapshot(null);
-								Line line = new Line(klauz.getTranslateX()+klauz.getMinWidth()/2, klauz.getTranslateY(),
+								GrafLine line = new GrafLine(klauz.getTranslateX()+klauz.getMinWidth()/2, klauz.getTranslateY(),
 										text.getTranslateX()+text.getMinWidth()/2, text.getTranslateY()+text.getMinHeight());
 
-								line.setStroke(Color.RED);
 								pane.getChildren().add(line);
-								mapaLinii.add(new Pair<Integer, Line>(listaKlauzul.indexOf(klauz), line));
+								mapaLinii.add(new Pair<Integer, GrafLine>(listaKlauzul.indexOf(klauz), line));
 								
 								if(check)break;
 								check=true;
 							}
 						}
 					}
-					powt++;
+					kon++;
 				}
 			}
-			if(last+40>stage.getWidth())stage.setWidth(last+40);
 			
 		}
-		for (Button klauz: listaKlauzul){
+		for (GrafButton klauz: listaKlauzul){
 			pane.getChildren().add(klauz);
 
 		}

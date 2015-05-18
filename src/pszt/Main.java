@@ -116,6 +116,27 @@ public class Main extends Application{
         btn2.setTranslateX(0);
         btn2.setTranslateY(25);
         pane.getChildren().add(btn2);
+        Button btn3 = new Button();
+        btn3.setText("Uzasadnien");
+        btn3.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+        		if(test.equals("1")){
+        			test1("U");
+        		}
+        		else if(test.equals("2")){
+        			test2("U");
+        		}
+        		else{
+        			test3("U");
+        		}
+        		graf.tworzGraf(log);
+            }
+        });
+        btn3.setTranslateX(0);
+        btn3.setTranslateY(50);
+        pane.getChildren().add(btn3);
         
 	}
 	static void  test1(String typ){
@@ -141,6 +162,7 @@ public class Main extends Application{
 		
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
+		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
 		
 		
 	}
@@ -171,6 +193,7 @@ public class Main extends Application{
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
+		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
 	}
 	static void test3(String typ){
 		//PRZYK£AD 2
@@ -210,6 +233,7 @@ public class Main extends Application{
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
+		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
 		
 	}
 	
@@ -230,7 +254,7 @@ public class Main extends Application{
 		K2.add(new Literal("A"));
 		K2.get(0).setNegacja(true);
 		K2.get(0).getArgumenty().add(new Literal("d"));
-		K2.get(0).getArgumenty().add(new Literal("b"));
+		K2.get(0).getArgumenty().add(new Literal("d"));
 		K2.get(0).getArgumenty().add(new Literal("StalaF"));
 		K2.get(0).getArgumenty().get(0).setStala(false);
 		K2.get(0).getArgumenty().get(1).setStala(false);

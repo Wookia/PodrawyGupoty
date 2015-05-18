@@ -95,6 +95,40 @@ public
 	
 		for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych lub par stala/zmienna
 		{
+			if(!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
+				paryRozne.add(i);
+		}
+		
+		for(int i = 0; i < paryRozne.size(); i++){
+			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryRozne.get(i));
+			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryRozne.get(i));
+			
+			if(tmp2.stala){
+				if(sprawdzUsuniete(tmp1, argUsuniete1, argDodane1, tmp2)) continue;
+				else
+				{
+					argDodane1.add(new String(tmp2.nazwa));
+					argUsuniete1.add(new String(tmp1.nazwa));
+				}
+				tmp1.stala = true;
+				tmp1.nazwa = new String(tmp2.nazwa);
+			}
+			else{
+				if(sprawdzUsuniete(tmp2, argUsuniete2, argDodane2, tmp1)) continue;
+				else
+				{
+					argDodane2.add(new String(tmp1.nazwa));
+					argUsuniete2.add(new String(tmp2.nazwa));
+				}
+				tmp2.stala = true;
+				tmp2.nazwa = new String(tmp1.nazwa);
+			}
+		}
+		
+		
+
+		for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych lub par stala/zmienna
+		{
 			if((tmpLiteral1.getArgumenty().get(i).stala == tmpLiteral2.getArgumenty().get(i).stala) && 
 					!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
 			{
@@ -102,43 +136,29 @@ public
 					return false;	//dwie stale, wychodzimy!
 				else paryZmiennych.add(i);
 			}
-			else if(!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
-				paryRozne.add(i);
 		}
+		
 		
 
 		for(int i = 0; i < paryZmiennych.size(); i++){
-			
 			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
 			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
 			
-			argDodane2.add(new String(tmp1.nazwa));
-			argUsuniete2.add(new String(tmp2.nazwa));
-			tmp2.nazwa = new String(tmp1.nazwa);
-			
-		}	
-		
-		for(int i = 0; i < paryRozne.size(); i++){
-			
-			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryRozne.get(i));
-			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryRozne.get(i));
-			
-			if(tmp2.stala){
-				argDodane1.add(new String(tmp2.nazwa));
-				argUsuniete1.add(new String(tmp1.nazwa));
-				tmp1.stala = true;
-				tmp1.nazwa = new String(tmp2.nazwa);
-				
-			}
-			else{
+			sprawdzUsuniete(tmp1, argUsuniete1, argDodane1, tmp2);
+			if(!sprawdzUsuniete(tmp2, argUsuniete2, argDodane2, tmp1))
+			{
 				argDodane2.add(new String(tmp1.nazwa));
 				argUsuniete2.add(new String(tmp2.nazwa));
-				tmp2.stala = true;
 				tmp2.nazwa = new String(tmp1.nazwa);
-				
+				continue;
 			}
-			
-		}	
+			tmp2.nazwa = new String(tmp1.nazwa);
+		}
+		
+
+		poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
+		poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);
+	
 		
 		System.out.println("K1 przed podstawieniem:");
 		for(Literal l: literal1.argumenty)
@@ -168,36 +188,56 @@ public
 			literal2 = tmpLiteral2;
 			for(Literal l: listaLiteralow1)
 			{
-				for(Literal arg: l.argumenty)
-				{	
-					int i = 0;
-					for(String nazwaUsunietego: argUsuniete1)
-					{
-						if(arg.nazwa.equals(nazwaUsunietego))
-						{
-							arg.nazwa = new String(argDodane1.get(i));
-						}
-					}
-					i++;
-				}
+				poprawUsuniete(l, argUsuniete1, argDodane1);
 			}
 			
 			for(Literal l: listaLiteralow2)
 			{
-				for(Literal arg: l.argumenty)
-				{	
-					int i = 0;
-					for(String nazwaUsunietego: argUsuniete2)
-					{
-						if(arg.nazwa.equals(nazwaUsunietego))
-						{
-							arg.nazwa = new String(argDodane2.get(i));
-						}
-					}
-					i++;
-				}
+				poprawUsuniete(l, argUsuniete2, argDodane2);
 			}
 		}
 		return sukcesPodstawienia;
 	}
+	
+	static boolean sprawdzUsuniete(Literal tmp, ArrayList<String> argUsuniete, ArrayList<String> argDodane, Literal lit)
+	{
+		int i = 0;
+		for(String nazwaUsunietego: argUsuniete)
+		{
+			if(nazwaUsunietego.equals(tmp.nazwa))
+			{
+				for(Literal arg: lit.argumenty)
+				{
+					if(arg.nazwa.equals(nazwaUsunietego))
+					{
+						argUsuniete.add(new String(tmp.nazwa));
+						argDodane.add(new String(argDodane.get(i)));
+						tmp.nazwa = new String(argDodane.get(i));
+						tmp.stala = arg.stala;
+						return true;
+					}
+				}
+			}
+			i++;
+		}
+		return false;
+	}
+	
+	static void poprawUsuniete(Literal tmp, ArrayList<String> argUsuniete, ArrayList<String> argDodane)
+	{
+		for(Literal arg: tmp.argumenty)
+		{	
+			int i = 0;
+			for(String nazwaUsunietego: argUsuniete)
+			{
+				if(arg.nazwa.equals(nazwaUsunietego))
+				{
+					arg.nazwa = new String(argDodane.get(i));
+					//DODAC PRZYPISYWANIE STALYCH
+				}
+			}
+			i++;
+		}
+	}
+	
 }

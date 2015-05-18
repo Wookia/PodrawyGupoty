@@ -244,21 +244,25 @@ public class Main extends Application{
 		
 		K1.add(new Literal("A"));
 		K1.get(0).setNegacja(false);
+		K1.get(0).getArgumenty().add(new Literal("StalaX"));
 		K1.get(0).getArgumenty().add(new Literal("a"));
-		K1.get(0).getArgumenty().add(new Literal("b"));
-		K1.get(0).getArgumenty().add(new Literal("c"));
-		K1.get(0).getArgumenty().get(0).setStala(false);
+		K1.get(0).getArgumenty().add(new Literal("a"));
+		K1.get(0).getArgumenty().add(new Literal("d"));
+		K1.get(0).getArgumenty().get(0).setStala(true);
 		K1.get(0).getArgumenty().get(1).setStala(false);
 		K1.get(0).getArgumenty().get(2).setStala(false);
+		K1.get(0).getArgumenty().get(3).setStala(false);
 		
 		K2.add(new Literal("A"));
 		K2.get(0).setNegacja(true);
+		K2.get(0).getArgumenty().add(new Literal("a"));
 		K2.get(0).getArgumenty().add(new Literal("d"));
+		K2.get(0).getArgumenty().add(new Literal("a"));
 		K2.get(0).getArgumenty().add(new Literal("d"));
-		K2.get(0).getArgumenty().add(new Literal("StalaF"));
 		K2.get(0).getArgumenty().get(0).setStala(false);
 		K2.get(0).getArgumenty().get(1).setStala(false);
-		K2.get(0).getArgumenty().get(2).setStala(true);
+		K2.get(0).getArgumenty().get(2).setStala(false);
+		K2.get(0).getArgumenty().get(3).setStala(false);
 		
 		Klauzula klauz1 = new Klauzula();
 		Klauzula klauz2 = new Klauzula();

@@ -2,6 +2,7 @@ package pszt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 public class Literal {
 private
 	List<Literal> argumenty;
@@ -58,17 +59,13 @@ public
 		return argumenty;
 	}
 	
-	
-	//uwaga, nowe :D
 	static boolean sprawdzArgumenty(Literal literal1, Literal literal2){
-		
 		int rozmiar;
 		int licznik = 0;
 		if(literal1.argumenty.size() != literal2.argumenty.size())
 			return false;
 		
 		rozmiar = literal1.argumenty.size();
-		
 		for( int i = 0; i < rozmiar; i++)
 		{
 			if( literal1.argumenty.get(i).negacja == literal2.argumenty.get(i).negacja && 
@@ -81,84 +78,96 @@ public
 	}
 	
 	static boolean podstaw(Literal literal1, Literal literal2, List<Literal> listaLiteralow1, List<Literal> listaLiteralow2){
+		
+		Random kierunekPodstawienia = new Random();
 		ArrayList<Integer> paryZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych mozemy zrobic podstawienia
 		ArrayList<Integer> paryRozne = new ArrayList<Integer>();
-		ArrayList<String> argUsuniete1 = new ArrayList<String>();	//jakie argumenty wyrzucilismy z pierwszej klauzuli
-		ArrayList<String> argDodane1 = new ArrayList<String>();	//jakie argumenty dodalismy do pierwszej klauzuli
-		ArrayList<String> argUsuniete2 = new ArrayList<String>();
-		ArrayList<String> argDodane2 = new ArrayList<String>();
-		
+		ArrayList<Literal> argUsuniete1 = new ArrayList<Literal>();	//jakie argumenty wyrzucilismy z pierwszej klauzuli
+		ArrayList<Literal> argDodane1 = new ArrayList<Literal>();	//jakie argumenty dodalismy do pierwszej klauzuli
+		ArrayList<Literal> argUsuniete2 = new ArrayList<Literal>();
+		ArrayList<Literal> argDodane2 = new ArrayList<Literal>();
+
 		Literal tmpLiteral1 = new Literal(literal1);	//tworze kopie dla bezpieczenstwa oryginalnych danych
 		Literal tmpLiteral2 = new Literal(literal2);
 		
-		boolean sukcesPodstawienia = false;
-	
-		for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych lub par stala/zmienna
+		
+		// czesc wykonujaca "do oporu" podstawienia stalych
+		while(mozliwePodstawienie(tmpLiteral1, tmpLiteral2, true))
 		{
-			if(!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
+			for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par stala/zmienna
+			{
+				if(!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
 				paryRozne.add(i);
-		}
-		
-		for(int i = 0; i < paryRozne.size(); i++){
-			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryRozne.get(i));
-			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryRozne.get(i));
+			}
 			
-			if(tmp2.stala){
-				if(sprawdzUsuniete(tmp1, argUsuniete1, argDodane1, tmp2)) continue;
-				else
+			for(int i = 0; i < paryRozne.size(); i++)
+			{
+				Literal tmp1 = tmpLiteral1.getArgumenty().get(paryRozne.get(i));
+				Literal tmp2 = tmpLiteral2.getArgumenty().get(paryRozne.get(i));
+				
+				
+				if(tmp1.stala)
 				{
-					argDodane1.add(new String(tmp2.nazwa));
-					argUsuniete1.add(new String(tmp1.nazwa));
+					argUsuniete2.add(new Literal(tmp2));
+					argDodane2.add(new Literal(tmp1));
+					tmp2.nazwa = new String(tmp1.nazwa);
+					tmp2.stala = true;
+					
 				}
-				tmp1.stala = true;
-				tmp1.nazwa = new String(tmp2.nazwa);
-			}
-			else{
-				if(sprawdzUsuniete(tmp2, argUsuniete2, argDodane2, tmp1)) continue;
-				else
+				else if(tmp2.stala)
 				{
-					argDodane2.add(new String(tmp1.nazwa));
-					argUsuniete2.add(new String(tmp2.nazwa));
+					argUsuniete1.add(new Literal(tmp1));
+					argDodane1.add(new Literal(tmp2));
+					tmp1.nazwa = new String(tmp2.nazwa);
+					tmp1.stala = true;
 				}
-				tmp2.stala = true;
-				tmp2.nazwa = new String(tmp1.nazwa);
+				
+				poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
+				poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);
 			}
+			paryRozne.clear();
 		}
 		
-		
-
-		for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych lub par stala/zmienna
+		while(mozliwePodstawienie(tmpLiteral1, tmpLiteral2, false))
 		{
-			if((tmpLiteral1.getArgumenty().get(i).stala == tmpLiteral2.getArgumenty().get(i).stala) && 
-					!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
+			for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych
 			{
-				if (tmpLiteral1.getArgumenty().get(i).stala == true)
-					return false;	//dwie stale, wychodzimy!
-				else paryZmiennych.add(i);
+				if((tmpLiteral1.getArgumenty().get(i).stala == tmpLiteral2.getArgumenty().get(i).stala) && 
+						!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
+				{
+					if (tmpLiteral1.getArgumenty().get(i).stala == true)
+						return false;	//dwie stale, wychodzimy!
+					else paryZmiennych.add(i);
+				}
 			}
-		}
-		
-		
-
-		for(int i = 0; i < paryZmiennych.size(); i++){
-			Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
-			Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
 			
-			sprawdzUsuniete(tmp1, argUsuniete1, argDodane1, tmp2);
-			if(!sprawdzUsuniete(tmp2, argUsuniete2, argDodane2, tmp1))
+			for(int i = 0; i < paryZmiennych.size(); i++)
 			{
-				argDodane2.add(new String(tmp1.nazwa));
-				argUsuniete2.add(new String(tmp2.nazwa));
-				tmp2.nazwa = new String(tmp1.nazwa);
-				continue;
+				Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
+				Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
+				
+				if(kierunekPodstawienia.nextBoolean() && !czyPodstawiono(tmp1.nazwa, argUsuniete2))
+				{
+					argUsuniete2.add(new Literal(tmp2));
+					argDodane2.add(new Literal(tmp1));
+					tmp2.nazwa = new String(tmp1.nazwa);
+					tmp2.stala = tmp1.stala;
+					
+				}
+				else if(!czyPodstawiono(tmp2.nazwa, argUsuniete1))
+				{
+					argUsuniete1.add(new Literal(tmp1));
+					argDodane1.add(new Literal(tmp2));
+					tmp1.nazwa = new String(tmp2.nazwa);
+					tmp1.stala = tmp2.stala;
+				}
+				
+				poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
+				poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);	
 			}
-			tmp2.nazwa = new String(tmp1.nazwa);
+			paryZmiennych.clear();
 		}
 		
-
-		poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
-		poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);
-	
 		
 		System.out.println("K1 przed podstawieniem:");
 		for(Literal l: literal1.argumenty)
@@ -174,70 +183,76 @@ public
 			System.out.println(l.nazwa);
 		
 		System.out.println("Dodane do K1:");
-		System.out.println(argDodane1);
+		for(Literal arg: argDodane1)
+			System.out.println(arg.nazwa);
 		System.out.println("Usuniete z K1:");
-		System.out.println(argUsuniete1);
+		for(Literal arg: argUsuniete1)
+			System.out.println(arg.nazwa);
 		System.out.println("Dodane do K2:");
-		System.out.println(argDodane2);
+		for(Literal arg: argDodane2)
+			System.out.println(arg.nazwa);
 		System.out.println("Usuniete z K2:");
-		System.out.println(argUsuniete2);
+		for(Literal arg: argUsuniete2)
+			System.out.println(arg.nazwa);
 		
-		if(sprawdzArgumenty(tmpLiteral1, tmpLiteral2)){
-			sukcesPodstawienia = true;
-			literal1 = tmpLiteral1;
-			literal2 = tmpLiteral2;
-			for(Literal l: listaLiteralow1)
-			{
-				poprawUsuniete(l, argUsuniete1, argDodane1);
-			}
-			
-			for(Literal l: listaLiteralow2)
-			{
-				poprawUsuniete(l, argUsuniete2, argDodane2);
-			}
+
+		for(Literal lit1: listaLiteralow1)
+		{
+			poprawUsuniete(lit1, argUsuniete1, argDodane1);
 		}
-		return sukcesPodstawienia;
+		
+		for(Literal lit2: listaLiteralow2)
+		{
+			poprawUsuniete(lit2, argUsuniete2, argDodane2);
+		}
+		
+		return true;
 	}
 	
-	static boolean sprawdzUsuniete(Literal tmp, ArrayList<String> argUsuniete, ArrayList<String> argDodane, Literal lit)
+	static boolean czyPodstawiono(String nazwa, ArrayList<Literal> usuniete)
+	{
+		boolean wynik = false;
+		
+		for(Literal literal: usuniete)
+		{
+			if(literal.nazwa.equals(nazwa)) wynik = true;
+		}
+		
+		return wynik;
+	}
+	
+	static void poprawUsuniete(Literal literal1, ArrayList<Literal> usuniete, ArrayList<Literal> dodane)
 	{
 		int i = 0;
-		for(String nazwaUsunietego: argUsuniete)
+		for(Literal usunietyArgument: usuniete)
 		{
-			if(nazwaUsunietego.equals(tmp.nazwa))
+			for(Literal argument: literal1.getArgumenty())
 			{
-				for(Literal arg: lit.argumenty)
+				if(argument.getNazwa().equals(usunietyArgument.getNazwa()))
 				{
-					if(arg.nazwa.equals(nazwaUsunietego))
-					{
-						argUsuniete.add(new String(tmp.nazwa));
-						argDodane.add(new String(argDodane.get(i)));
-						tmp.nazwa = new String(argDodane.get(i));
-						tmp.stala = arg.stala;
-						return true;
-					}
+					argument.nazwa = new String(dodane.get(i).getNazwa());
+					argument.stala = dodane.get(i).stala;
 				}
 			}
 			i++;
 		}
-		return false;
 	}
-	
-	static void poprawUsuniete(Literal tmp, ArrayList<String> argUsuniete, ArrayList<String> argDodane)
+		
+	static boolean mozliwePodstawienie(Literal literal1, Literal literal2, boolean wariant)
 	{
-		for(Literal arg: tmp.argumenty)
-		{	
-			int i = 0;
-			for(String nazwaUsunietego: argUsuniete)
-			{
-				if(arg.nazwa.equals(nazwaUsunietego))
-				{
-					arg.nazwa = new String(argDodane.get(i));
-					//DODAC PRZYPISYWANIE STALYCH
-				}
-			}
+		boolean mozliwePodstawienie = false;
+		int i = 0;
+		
+		for(Literal l1: literal1.getArgumenty())
+		{
+			if(wariant && l1.stala!=literal2.getArgumenty().get(i).stala)
+				mozliwePodstawienie = true;
+			
+			else if(!wariant && l1.stala == false && l1.stala == literal2.getArgumenty().get(i).stala && 
+					!l1.getNazwa().equals(literal2.getArgumenty().get(i).getNazwa()))
+				mozliwePodstawienie = true;
 			i++;
 		}
+		return mozliwePodstawienie;
 	}
-	
 }

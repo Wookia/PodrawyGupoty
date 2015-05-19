@@ -28,16 +28,12 @@ public
 		literaly = new ArrayList<Literal>();
 		for(Literal l: K1.literaly)
 		{
-			int i = 0;
 			Literal nowy = new Literal(l.nazwa);
 			nowy.stala = l.stala;
 			nowy.negacja = l.negacja;
-			this.literaly = new ArrayList<Literal>();
-			this.literaly.add(nowy);
-			
 			for(Literal argument: l.getArgumenty())
-				this.literaly.get(i).getArgumenty().add(new Literal(argument));
-			i++;
+				nowy.getArgumenty().add(new Literal(argument));
+			this.literaly.add(nowy);
 		}
 	}
 	
@@ -108,13 +104,11 @@ public
 		tmp2 = new Klauzula(klauzula2);
 		
 		
-		
 		for (Literal literal1: tmp1.getLiteraly()){
 			for(Literal literal2: tmp2.getLiteraly()){
 				if(literal1.getNazwa().equals((literal2).getNazwa()) && literal1.getNegacja()!=literal2.getNegacja() && 
 						!Literal.sprawdzArgumenty(literal1,literal2))
 					{
-					
 						if(!Literal.podstaw(literal1, literal2, tmp1.getLiteraly(), tmp2.getLiteraly()))
 							continue;	//nie udalo sie wykonac podstawienia dla danych literalow, patrzymy dalej
 						wykonano = true;
@@ -126,6 +120,19 @@ public
 		if(!wykonano) return null;
 		
 		wynik = new Klauzula(tmp1, tmp2);
+		
+		System.out.println("KLAUZULA WYNIKOWA:");
+		for(Literal l: wynik.getLiteraly())
+		{
+			System.out.println("Argumenty literalu " + l.negacja + l.nazwa + ":");
+			for(Literal arg: l.getArgumenty())
+			{
+				System.out.println(arg.stala + arg.nazwa);
+			}
+		}
+		
+		
+		
 		return wynik;
 	}
 	

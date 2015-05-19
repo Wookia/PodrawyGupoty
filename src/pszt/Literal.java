@@ -78,8 +78,6 @@ public
 	}
 	
 	static boolean podstaw(Literal literal1, Literal literal2, List<Literal> listaLiteralow1, List<Literal> listaLiteralow2){
-		
-		Random kierunekPodstawienia = new Random();
 		ArrayList<Integer> paryZmiennych = new ArrayList<Integer>();	//miejsca, na ktorych mozemy zrobic podstawienia
 		ArrayList<Integer> paryRozne = new ArrayList<Integer>();
 		ArrayList<Literal> argUsuniete1 = new ArrayList<Literal>();	//jakie argumenty wyrzucilismy z pierwszej klauzuli
@@ -94,6 +92,8 @@ public
 		// czesc wykonujaca "do oporu" podstawienia stalych
 		while(mozliwePodstawienie(tmpLiteral1, tmpLiteral2, true))
 		{
+			int licznik = 0;
+			
 			for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par stala/zmienna
 			{
 				if(!tmpLiteral1.getArgumenty().get(i).nazwa.equals(tmpLiteral2.getArgumenty().get(i).nazwa))
@@ -112,6 +112,7 @@ public
 					argDodane2.add(new Literal(tmp1));
 					tmp2.nazwa = new String(tmp1.nazwa);
 					tmp2.stala = true;
+					licznik++;
 					
 				}
 				else if(tmp2.stala)
@@ -120,16 +121,19 @@ public
 					argDodane1.add(new Literal(tmp2));
 					tmp1.nazwa = new String(tmp2.nazwa);
 					tmp1.stala = true;
+					licznik++;
 				}
 				
 				poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
 				poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);
 			}
 			paryRozne.clear();
+			if(licznik == 0) break;
 		}
 		
 		while(mozliwePodstawienie(tmpLiteral1, tmpLiteral2, false))
 		{
+			int licznik = 0;
 			for(int i = 0; i < tmpLiteral1.getArgumenty().size(); i++)	//szukanie par zmiennych
 			{
 				if((tmpLiteral1.getArgumenty().get(i).stala == tmpLiteral2.getArgumenty().get(i).stala) && 
@@ -146,12 +150,13 @@ public
 				Literal tmp1 = tmpLiteral1.getArgumenty().get(paryZmiennych.get(i));
 				Literal tmp2 = tmpLiteral2.getArgumenty().get(paryZmiennych.get(i));
 				
-				if(kierunekPodstawienia.nextBoolean() && !czyPodstawiono(tmp1.nazwa, argUsuniete2))
+				if(!czyPodstawiono(tmp1.nazwa, argUsuniete2))
 				{
 					argUsuniete2.add(new Literal(tmp2));
 					argDodane2.add(new Literal(tmp1));
 					tmp2.nazwa = new String(tmp1.nazwa);
 					tmp2.stala = tmp1.stala;
+					licznik++;
 					
 				}
 				else if(!czyPodstawiono(tmp2.nazwa, argUsuniete1))
@@ -160,12 +165,14 @@ public
 					argDodane1.add(new Literal(tmp2));
 					tmp1.nazwa = new String(tmp2.nazwa);
 					tmp1.stala = tmp2.stala;
+					licznik++;
 				}
 				
 				poprawUsuniete(tmpLiteral1, argUsuniete1, argDodane1);
 				poprawUsuniete(tmpLiteral2, argUsuniete2, argDodane2);	
 			}
 			paryZmiennych.clear();
+			if(licznik == 0) break;
 		}
 		
 		

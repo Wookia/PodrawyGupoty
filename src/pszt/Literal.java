@@ -25,8 +25,8 @@ public
 		else{
 			this.nazwa = literalString;
 		}
-		argumenty = new ArrayList<Literal>();	//TODO dodawanie argumentow/wyszukiwanie czy cos.
-		argumenty = znajdzArgumenty(literalString);	//JAK TO NIE PIERDOLNIE BEDZIE CUD xD
+		argumenty = new ArrayList<Literal>();
+		argumenty = znajdzArgumenty(literalString);
 		System.out.println("ARGUMENTY LITERALU");
 		for(Literal l: argumenty)
 		{
@@ -88,10 +88,8 @@ public
 		temp2 = temp.split(",");
 		for(String s : temp2)
 		{
-			listaLiteralowArgumenty.add(new Literal(s));	//i niech sie dzieje zuo rekurencja odpalanych konstruktorow, to nie moze zadzialac :D
-			
+			listaLiteralowArgumenty.add(new Literal(s));	//i niech sie dzieje zuo rekurencja odpalanych konstruktorow, to nie moze zadzialac :D	
 		}
-		
 		return listaLiteralowArgumenty;
 		
 		

@@ -6,7 +6,7 @@ import java.util.List;
 public class Log {
 	private 
 		List<LogKlauzula> log;
-		LogKlauzula teza=null;
+		LogKlauzula teza=null;	//to co robimy z tego arraylist?
 	public
 	Log(){
 		log = new ArrayList<LogKlauzula>();
@@ -71,6 +71,7 @@ public class Log {
 		}
 		if(!zbior)this.teza = log.get(log.size()-1);
 		else this.teza=null;
+		//TODO pewnie bedzie trzeba przerobic, teza to wiecej niz jedna klauzula :/
 	}
 	ArrayList<Integer> iloscKlauzulNaIteracje(){
 		int n=0;

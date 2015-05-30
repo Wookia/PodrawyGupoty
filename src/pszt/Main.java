@@ -137,9 +137,6 @@ public class Main extends Application{
 			this.rozwiazuj("W");
 			}
 		
-		
-		
-		
 		return;
 		}
 	}

@@ -27,11 +27,8 @@ public class Parser{
 	final String delimiter1 = ":";
 	final String delimiter2 = "v";		//nie uzywac v w nazwach. chyba, ze komus sie chce przekopywac tablice znakow
 	
-	Parser(){
-		
-		
+	Parser(){	
 	}
-	
 	
 	
 	boolean wybierzPlik(Stage stage) {
@@ -39,9 +36,7 @@ public class Parser{
 	     if (file != null) {
 	        return true;
 	     }
-	     return false; //nie chce mi sie wyjatkow rzucac pff
-
-		
+	     return false;
 	}
 
 
@@ -49,8 +44,7 @@ public class Parser{
 	public boolean parsujPlik(){
 		try {
 			wszystkieLinie = Files.readAllLines(Paths.get(file.getPath()), cp1252);
-			for(String s : wszystkieLinie)
-			{
+			for(String s : wszystkieLinie) {
 				if(!s.contains(delimiter1))
 					return false;
 			}
@@ -59,7 +53,6 @@ public class Parser{
 		}
 		catch(IOException e){
 			e.printStackTrace();
-			
 			return false;
 		}
 		
@@ -79,8 +72,6 @@ public class Parser{
 				System.out.println(ss);
 			}
 		}
-		
-		
 	}
 
 
@@ -97,13 +88,10 @@ public class Parser{
 					if(zs.startsWith(" ")){
 						System.out.println("BEZ PIERWSZEGO ZNAKU " + zs.substring(1));
 						tempString2.add(zs.substring(1));
-						
 					}
 					else{
 						tempString2.add(zs);
 					}
-						
-					
 				}
 				tablicaPodzielonychLinii.add(tempString2.toArray(new String[tempString2.size()]));
 				tempString2.clear();
@@ -111,7 +99,6 @@ public class Parser{
 			licznik++;
 		}
 		licznik = 0;
-		
 	}
 	
 	public void dodajKlauzuleParser(BazaWiedzy baza, BazaWiedzy bazaTez)
@@ -130,8 +117,6 @@ public class Parser{
 			}
 			if(i==1)
 			{
-				//private ArrayList<String> doBazyWiedzy = new ArrayList<String>();
-				//NIE MA SPRAWDZANIA TEZ :C
 				for(String stringWTablicy: tabString)
 				{
 					doBazyWiedzy.add(stringWTablicy);
@@ -150,17 +135,10 @@ public class Parser{
 					baza.dodajKlauzule(doBazyWiedzy);
 				}
 				
-				doBazyWiedzy = new ArrayList<String>();
-				
-				
+				doBazyWiedzy = new ArrayList<String>();	
 			}
-			
-			
 			i=(i+1)%2;
 		}
-		
-		
-		
 	}
 }
 

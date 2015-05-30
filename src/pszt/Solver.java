@@ -206,5 +206,46 @@ public class Solver {
 
 			return log;
 		}
+		
+		
+/* 		Log solveNajkrotsze(BazaWiedzy bazaTez){
+			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
+			Log log = new Log();
+			log.dodajBazê(bazaWiedzy, false);
+			int size = bazaWiedzy.getBaza().size();
+			int i=1;
+			int najkrotszeZlaczenie = 0;
+			boolean stop = false;
+			while(!bazaWiedzy.sprawdzSprzecznosc()){
+				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
+						if(czyMerge(klauzula1, aktualna) == 1){
+							Klauzula klauzula = new Klauzula(klauzula1, );
+							mikroBaza.add(klauzula);
+							log.dodajKlauzule(klauzula1, aktualna, klauzula, i, false);
+							
+							if(klauzula.czyFalsz()){
+								stop=true;
+							}
+							break;
+						
+						}
+						else if(czyMerge(klauzula1, aktualna) == 2)
+						{
+							
+							// do zrobienia wstawienie podstawionej klauzuli
+							
+						}
+				if(stop)break;
+				}
+				i=i+1;
+				bazaWiedzy.addMikroBaza(mikroBaza); //poczebne
+				mikroBaza.clear(); //poczebne
+				if(stop)break;
+				
+				size=bazaWiedzy.getBaza().size();
+
+			}
+			return log;
+		} */
 
 }

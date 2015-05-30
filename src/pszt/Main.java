@@ -134,7 +134,7 @@ public class Main extends Application{
 			baza.getBaza().clear();
 			parser.dodajKlauzuleParser(baza,bazaTez);
 			
-			this.rozwiazuj("N");
+			this.rozwiazuj("U");
 			}
 		
 		return;
@@ -272,7 +272,7 @@ public class Main extends Application{
 		test.add("C");
 		baza.dodajKlauzule(test);
 		test.clear();
-		test.add("!B");
+		test.add("!B(x)");
 		test.add("D");
 		baza.dodajKlauzule(test);
 		test.clear();
@@ -297,7 +297,7 @@ public class Main extends Application{
 		baza.dodajKlauzule(test);
 		//teza
 		test.clear();
-		test.add("B");		//czyli podajemy teze poprostu jako argument? no dobra to trzeba przerobic, zwlaszcza ze teza to nie koniecznie chyba 1 klauzula z tego co mowil PW
+		test.add("B(x)");		//czyli podajemy teze poprostu jako argument? no dobra to trzeba przerobic, zwlaszcza ze teza to nie koniecznie chyba 1 klauzula z tego co mowil PW
 		
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
@@ -309,7 +309,7 @@ public class Main extends Application{
 	public void rozwiazuj(String typ)
 	{
 		ArrayList<String> test = new ArrayList<String>();
-		test.add("B");
+		test.add("B(x,y)");
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);

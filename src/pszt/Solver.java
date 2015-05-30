@@ -161,6 +161,7 @@ public class Solver {
 						else if(czyMerge(klauzula1, klauzula2) == 2)
 						{
 							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
+							System.out.println("Probuje podstawic!");
 							if(klauzula != null)
 							{
 								if(klauzula.czyFalsz())
@@ -231,17 +232,11 @@ public class Solver {
 								temp1 = klauzula1;
 								temp2 = klauzula2;
 							}
-							//?mikroBaza.add(klauzula);
-							//log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, false);
-							
-							/*if(klauzula.czyFalsz()){
-								stop=true;
-							} */
 						
 						}
 						else if(czyMerge(klauzula1, klauzula2) == 2)
 						{
-							
+							System.out.println("Probuje podstawic!");
 							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
 							if(klauzula != null)
 							{

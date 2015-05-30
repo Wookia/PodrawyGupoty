@@ -1,0 +1,8 @@
+K1: !AvBvC
+K2: !B(x,y)vD
+K3: !Cv!D
+K4: CvD
+K5: !CvE
+K6: !Dv!E
+K7: E
+TEZA: B(x,y)

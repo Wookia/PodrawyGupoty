@@ -28,9 +28,12 @@ public
 		argumenty = new ArrayList<Literal>();
 		argumenty = znajdzArgumenty(literalString);
 		System.out.println("ARGUMENTY LITERALU");
+		if(argumenty.size()!=0){
+			stala = false;
+		}
 		for(Literal l: argumenty)
 		{
-			System.out.println(l.nazwa);
+			System.out.println(l.nazwa+ " " + argumenty.size() + " " + this.nazwa);
 		}
 		System.out.println("KONIEC ARG LITERALU");
 	}

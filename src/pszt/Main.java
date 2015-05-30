@@ -17,6 +17,7 @@ public class Main extends Application{
 	static Log log;
 	static Stage stage;
 	static Scene scene;
+	static Parser parser;
 	static final Pane pane  = new Pane();;
 	public void start(Stage primaryStage) {
 			testPodstawien();
@@ -63,6 +64,22 @@ public class Main extends Application{
 	        btn3.setTranslateX(0);
 	        btn3.setTranslateY(50);
 	        pane.getChildren().add(btn3);
+	        
+	        Button btn4 = new Button();
+	        btn4.setText("Otworz plik");
+	        btn4.setOnAction(new EventHandler<ActionEvent>() {
+	 
+	            @Override
+	            public void handle(ActionEvent event) {
+	            	parsujKonie(stage);
+	            }
+	        });
+
+	        btn4.setTranslateX(0);
+	        btn4.setTranslateY(75);
+	        pane.getChildren().add(btn4);
+	        
+	        
 	        stage.setScene(scene);
 	        stage.show();
 	}
@@ -70,6 +87,17 @@ public class Main extends Application{
 		
 		launch(args);
 
+	}
+	
+	private void parsujKonie(Stage stage) { //mozna zmienic na bool
+		parser = new Parser();
+		if(parser.wybierzPlik(stage)) {
+			parser.parsujPlik();		//zwraca boola zakladam, ze false jak plik do dupy, albo nie da sie go odczytac
+			parser.wyswietlListy();
+		}
+		
+		
+		return;
 	}
 	static void test(final String test){
 		pane.getChildren().clear();

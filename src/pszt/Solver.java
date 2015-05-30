@@ -208,44 +208,73 @@ public class Solver {
 		}
 		
 		
-/* 		Log solveNajkrotsze(BazaWiedzy bazaTez){
-			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
+ 		Log solveNajkrotsze(BazaWiedzy bazaTez){
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy, false);
-			int size = bazaWiedzy.getBaza().size();
-			int i=1;
-			int najkrotszeZlaczenie = 0;
+			log.dodajBazê(bazaTez,false);
+			bazaWiedzy.addMikroBaza(bazaTez.getBaza());//powinno dzialac chyba :D
+			int najkrotszeZlaczenie = 99999;
+			int i = 1;
+			Klauzula temp1=null;
+			Klauzula temp2=null;
+			Klauzula toNajkrotszeZlaczenie = null;
 			boolean stop = false;
 			while(!bazaWiedzy.sprawdzSprzecznosc()){
 				for (Klauzula klauzula1: bazaWiedzy.getBaza()){
-						if(czyMerge(klauzula1, aktualna) == 1){
-							Klauzula klauzula = new Klauzula(klauzula1, );
-							mikroBaza.add(klauzula);
-							log.dodajKlauzule(klauzula1, aktualna, klauzula, i, false);
-							
-							if(klauzula.czyFalsz()){
-								stop=true;
+					for(Klauzula klauzula2: bazaWiedzy.getBaza()) {
+						if(czyMerge(klauzula1, klauzula2) == 1){
+							Klauzula klauzula = new Klauzula(klauzula1,klauzula2);
+							if(klauzula.getLiteraly().size()<najkrotszeZlaczenie)
+							{
+								toNajkrotszeZlaczenie = klauzula;
+								najkrotszeZlaczenie = klauzula.getLiteraly().size();
+								temp1 = klauzula1;
+								temp2 = klauzula2;
 							}
-							break;
+							//?mikroBaza.add(klauzula);
+							//log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, false);
+							
+							/*if(klauzula.czyFalsz()){
+								stop=true;
+							} */
 						
 						}
-						else if(czyMerge(klauzula1, aktualna) == 2)
+						else if(czyMerge(klauzula1, klauzula2) == 2)
 						{
 							
-							// do zrobienia wstawienie podstawionej klauzuli
+							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
+							if(klauzula != null)
+							{
+								if(klauzula.getLiteraly().size()<najkrotszeZlaczenie){
+									toNajkrotszeZlaczenie = klauzula;
+									najkrotszeZlaczenie = klauzula.getLiteraly().size();
+									temp1 = klauzula1;
+									temp2 = klauzula2;
+								}
+							}
 							
 						}
-				if(stop)break;
+					}
 				}
-				i=i+1;
+				if(toNajkrotszeZlaczenie==null)
+					break;
+				if(toNajkrotszeZlaczenie.czyFalsz())
+				{
+					stop = true;
+				}
+				mikroBaza.add(toNajkrotszeZlaczenie);
+				log.dodajKlauzule(temp1, temp2, toNajkrotszeZlaczenie, i, false); //1 dla przypalu
 				bazaWiedzy.addMikroBaza(mikroBaza); //poczebne
 				mikroBaza.clear(); //poczebne
-				if(stop)break;
-				
-				size=bazaWiedzy.getBaza().size();
-
+				najkrotszeZlaczenie = 9999;
+				i=i+1;
+				if(stop)
+				{
+					System.out.println("Podobno cos jest");
+					break;
+				}
 			}
 			return log;
-		} */
+		} 
 
 }

@@ -134,7 +134,7 @@ public class Main extends Application{
 			baza.getBaza().clear();
 			parser.dodajKlauzuleParser(baza,bazaTez);
 			
-			this.rozwiazuj("W");
+			this.rozwiazuj("N");
 			}
 		
 		return;
@@ -314,6 +314,7 @@ public class Main extends Application{
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
 		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
+		else if(typ.equals("N"))log=solver.solveNajkrotsze(bazaTez);
 		graf.tworzGraf(log);
 		
 	}

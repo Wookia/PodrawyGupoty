@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 public class Parser{
 	final FileChooser fileChooser = new FileChooser();
 	private List<String> wszystkieLinie;
-	private String[] podzieloneLinie;
 	private List<String[]> tablicaPodzielonychLinii = new ArrayList<String[]>();
 	static int licznik = 0;
 	File file;
@@ -108,6 +107,40 @@ public class Parser{
 			licznik++;
 		}
 		licznik = 0;
+		
+	}
+	
+	public void dodajKlauzuleParser(BazaWiedzy baza)
+	{
+		int i =0;
+		ArrayList<String> doBazyWiedzy = new ArrayList<String>();
+		for(String[] tabString: tablicaPodzielonychLinii)
+		{
+			if(i==1)
+			{
+				//private ArrayList<String> doBazyWiedzy = new ArrayList<String>();
+				//NIE MA SPRAWDZANIA TEZ :C
+				for(String stringWTablicy: tabString)
+				{
+					doBazyWiedzy.add(stringWTablicy);
+				}
+				System.out.println("klauzula dodawana do bazy wiedzy");
+				for(String s : doBazyWiedzy)
+				{
+				System.out.println(s);
+				}
+				System.out.println("koniec wypisywania");
+				baza.dodajKlauzule(doBazyWiedzy);
+				doBazyWiedzy = new ArrayList<String>();
+				
+				
+			}
+			
+			
+			i=(i+1)%2;
+		}
+		
+		
 		
 	}
 }

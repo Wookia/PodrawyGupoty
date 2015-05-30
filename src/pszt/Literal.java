@@ -27,6 +27,12 @@ public
 		}
 		argumenty = new ArrayList<Literal>();	//TODO dodawanie argumentow/wyszukiwanie czy cos.
 		argumenty = znajdzArgumenty(literalString);	//JAK TO NIE PIERDOLNIE BEDZIE CUD xD
+		System.out.println("ARGUMENTY LITERALU");
+		for(Literal l: argumenty)
+		{
+			System.out.println(l.nazwa);
+		}
+		System.out.println("KONIEC ARG LITERALU");
 	}
 	Literal(Literal literal)
 	{
@@ -69,12 +75,16 @@ public
 		int indeksKonca;
 		indeksPoczatku = literalString.indexOf('(');
 		indeksKonca = literalString.lastIndexOf(')');
-		if(indeksPoczatku==indeksKonca)
+		if(!literalString.contains("("))
 		{
 			return new ArrayList<Literal>();
 		}
-		System.out.println(literalString.substring(indeksPoczatku, indeksKonca-1));
-		String temp = new String(literalString.substring(indeksPoczatku, indeksKonca-1));
+		if(!literalString.contains(")"))
+		{
+			return new ArrayList<Literal>();
+		}
+		System.out.println(literalString.substring(indeksPoczatku+1, indeksKonca));
+		String temp = new String(literalString.substring(indeksPoczatku+1, indeksKonca));
 		temp2 = temp.split(",");
 		for(String s : temp2)
 		{

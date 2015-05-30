@@ -94,6 +94,10 @@ public class Main extends Application{
 		if(parser.wybierzPlik(stage)) {
 			parser.parsujPlik();		//zwraca boola zakladam, ze false jak plik do dupy, albo nie da sie go odczytac
 			parser.wyswietlListy();
+			baza.getBaza().clear();
+			parser.dodajKlauzuleParser(baza);
+			
+			this.rozwiazuj("W");
 		}
 		
 		
@@ -256,12 +260,24 @@ public class Main extends Application{
 		baza.dodajKlauzule(test);
 		//teza
 		test.clear();
-		test.add("B");
+		test.add("B");		//czyli podajemy teze poprostu jako argument? no dobra to trzeba przerobic, zwlaszcza ze teza to nie koniecznie chyba 1 klauzula z tego co mowil PW
 		
 		Solver solver = new Solver(baza);
 		if(typ.equals("L"))log=solver.solveLiniowe(test);
 		else if(typ.equals("W"))log=solver.solveWszerz(test);
 		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
+		
+	}
+	
+	public void rozwiazuj(String typ)
+	{
+		ArrayList<String> test = new ArrayList<String>();
+		test.add("B");
+		Solver solver = new Solver(baza);
+		if(typ.equals("L"))log=solver.solveLiniowe(test);
+		else if(typ.equals("W"))log=solver.solveWszerz(test);
+		else if(typ.equals("U"))log=solver.solveZbiorUzasadnien(test);
+		graf.tworzGraf(log);
 		
 	}
 	

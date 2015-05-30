@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 public class Main extends Application{
 	static BazaWiedzy baza = new BazaWiedzy();
+	static BazaWiedzy bazaTez = new BazaWiedzy(); //dodatkowa baza wiedzy jako przechowalnia samych tez, wrzucane z parsera
 	static Graf graf;
 	static Log log;
 	static Stage stage;
@@ -95,7 +96,7 @@ public class Main extends Application{
 			parser.parsujPlik();		//zwraca boola zakladam, ze false jak plik do dupy, albo nie da sie go odczytac
 			parser.wyswietlListy();
 			baza.getBaza().clear();
-			parser.dodajKlauzuleParser(baza);
+			parser.dodajKlauzuleParser(baza,bazaTez);
 			
 			this.rozwiazuj("W");
 		}

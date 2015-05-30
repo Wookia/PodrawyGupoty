@@ -110,12 +110,20 @@ public class Parser{
 		
 	}
 	
-	public void dodajKlauzuleParser(BazaWiedzy baza)
+	public void dodajKlauzuleParser(BazaWiedzy baza, BazaWiedzy bazaTez)
 	{
 		int i =0;
+		boolean teza = false;
 		ArrayList<String> doBazyWiedzy = new ArrayList<String>();
 		for(String[] tabString: tablicaPodzielonychLinii)
 		{
+			if(i==0)
+			{
+				if(tabString[0].equals("TEZA")){
+					System.out.println("Dodawanie tezy do bazy wiedzy tez");
+					teza = true;
+				}
+			}
 			if(i==1)
 			{
 				//private ArrayList<String> doBazyWiedzy = new ArrayList<String>();
@@ -130,7 +138,14 @@ public class Parser{
 				System.out.println(s);
 				}
 				System.out.println("koniec wypisywania");
-				baza.dodajKlauzule(doBazyWiedzy);
+				if(teza){
+					bazaTez.dodajKlauzule(doBazyWiedzy);
+					teza = false;
+				}
+				else {
+					baza.dodajKlauzule(doBazyWiedzy);
+				}
+				
 				doBazyWiedzy = new ArrayList<String>();
 				
 				

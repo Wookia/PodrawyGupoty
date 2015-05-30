@@ -25,7 +25,8 @@ public
 		else{
 			this.nazwa = literalString;
 		}
-		argumenty = new ArrayList<Literal>();
+		argumenty = new ArrayList<Literal>();	//TODO dodawanie argumentow/wyszukiwanie czy cos.
+		argumenty = znajdzArgumenty(literalString);	//JAK TO NIE PIERDOLNIE BEDZIE CUD xD
 	}
 	Literal(Literal literal)
 	{
@@ -41,6 +42,8 @@ public
 			this.argumenty.add(nowy);
 		}
 	}
+	
+	
 	String getNazwa(){
 		return nazwa;
 	}
@@ -57,6 +60,32 @@ public
 	}
 	List<Literal> getArgumenty(){
 		return argumenty;
+	}
+	
+	private List<Literal> znajdzArgumenty(String literalString) {
+		List<Literal> listaLiteralowArgumenty = new ArrayList<Literal>();
+		String[] temp2;
+		int indeksPoczatku;
+		int indeksKonca;
+		indeksPoczatku = literalString.indexOf('(');
+		indeksKonca = literalString.lastIndexOf(')');
+		if(indeksPoczatku==indeksKonca)
+		{
+			return new ArrayList<Literal>();
+		}
+		System.out.println(literalString.substring(indeksPoczatku, indeksKonca-1));
+		String temp = new String(literalString.substring(indeksPoczatku, indeksKonca-1));
+		temp2 = temp.split(",");
+		for(String s : temp2)
+		{
+			listaLiteralowArgumenty.add(new Literal(s));	//i niech sie dzieje zuo rekurencja odpalanych konstruktorow, to nie moze zadzialac :D
+			
+		}
+		
+		return listaLiteralowArgumenty;
+		
+		
+		
 	}
 	
 	static boolean sprawdzArgumenty(Literal literal1, Literal literal2){

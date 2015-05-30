@@ -46,9 +46,14 @@ public class Parser{
 
 
 
-	public boolean parsujPlik() {
+	public boolean parsujPlik(){
 		try {
 			wszystkieLinie = Files.readAllLines(Paths.get(file.getPath()), cp1252);
+			for(String s : wszystkieLinie)
+			{
+				if(!s.contains(delimiter1))
+					return false;
+			}
 			this.splitujLinie();
 			return true;
 		}
@@ -85,7 +90,6 @@ public class Parser{
 		for(String s: wszystkieLinie){
 			for(String ss : s.split(delimiter1))
 			{
-				int licznik2 = 0;
 				System.out.println("Pierwszy split:" + ss);
 				tempString = ss.split(delimiter2);
 				for(String zs : tempString)

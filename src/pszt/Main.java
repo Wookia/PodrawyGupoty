@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 public class Main extends Application{
 	static BazaWiedzy baza = new BazaWiedzy();
@@ -91,18 +96,52 @@ public class Main extends Application{
 	}
 	
 	private void parsujKonie(Stage stage) { //mozna zmienic na bool
+		
 		parser = new Parser();
 		if(parser.wybierzPlik(stage)) {
-			parser.parsujPlik();		//zwraca boola zakladam, ze false jak plik do dupy, albo nie da sie go odczytac
+			if(!parser.parsujPlik()) //zwraca boola zakladam, ze false jak plik do dupy, albo nie da sie go odczytac
+			{
+				final Stage dialogStage = new Stage();
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+
+                Label exitLabel = new Label("Wybrano plik o niepoprawnym formacie!");
+                exitLabel.setAlignment(Pos.BASELINE_CENTER);
+
+                Button yesBtn = new Button("OK");
+                yesBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent arg0) {
+                        dialogStage.close();
+                    }
+  
+                });
+                HBox hBox = new HBox();
+                hBox.setAlignment(Pos.BASELINE_CENTER);
+                hBox.setSpacing(40.0);
+                hBox.getChildren().addAll(yesBtn);
+
+                VBox vBox = new VBox();
+                vBox.setSpacing(40.0);
+                vBox.getChildren().addAll(exitLabel, hBox);
+
+                dialogStage.setScene(new Scene(vBox));
+                dialogStage.show();
+			}
+			else
+			{
 			parser.wyswietlListy();
 			baza.getBaza().clear();
 			parser.dodajKlauzuleParser(baza,bazaTez);
 			
 			this.rozwiazuj("W");
-		}
+			}
+		
+		
 		
 		
 		return;
+		}
 	}
 	static void test(final String test){
 		pane.getChildren().clear();

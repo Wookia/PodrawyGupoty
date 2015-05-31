@@ -26,8 +26,8 @@ public class Main extends Application{
 	static Parser parser;
 	static final Pane pane  = new Pane();;
 	public void start(Stage primaryStage) {
-			testPodstawien();
-			testZbioruUzasadnien();
+	//		testPodstawien();
+	//		testZbioruUzasadnien();
 			stage = primaryStage;
 		 	primaryStage.setTitle("Podstawy g³upoty");
 	        scene = new Scene(pane, 300, 250);
@@ -134,7 +134,7 @@ public class Main extends Application{
 			baza.getBaza().clear();
 			parser.dodajKlauzuleParser(baza,bazaTez);
 			
-			this.rozwiazuj("U");
+			this.rozwiazuj("N");
 			}
 		
 		return;

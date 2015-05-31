@@ -34,6 +34,7 @@ public
 			for(Literal argument: l.getArgumenty())
 				nowy.getArgumenty().add(new Literal(argument));
 			this.literaly.add(nowy);
+			System.out.println("PRZEPISYWANIE ARGUMENTOW w klauzuli kop "+ l.getArgumenty().toString());
 		}
 	}
 	
@@ -149,9 +150,19 @@ public
 		for(Literal literal: literaly){
 			if (literal.getNegacja())nazwa=nazwa+"~";
 			nazwa=nazwa+literal.getNazwa();
+			System.out.println("Liczba argumentow w literale: " + literal.getArgumenty().size());
+			if(literal.getArgumenty().size()!=0){
+				nazwa=nazwa+"(";
+				for(Literal argument: literal.getArgumenty()){
+					nazwa=nazwa+argument.nazwa;
+					if(literal.getArgumenty().size()-1!=literal.getArgumenty().indexOf(argument))nazwa=nazwa+",";
+				}
+				nazwa=nazwa+")";
+			}
 			if(literaly.size()-1!=literaly.indexOf(literal))nazwa=nazwa+"v";
 		}
 		nazwa=nazwa+")";
+		System.out.println("GETNAZWAA "+ nazwa );
 		return nazwa;
 	}
 }

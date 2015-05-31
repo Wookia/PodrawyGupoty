@@ -25,15 +25,19 @@ public
 		else{
 			this.nazwa = literalString;
 		}
-		argumenty = new ArrayList<Literal>();
-		argumenty = znajdzArgumenty(literalString);
+		//argumenty = new ArrayList<Literal>();
+		argumenty = znajdzArgumenty(literalString);	//no tak.... nie uzywac tego konstruktora nigdzie przy kopiowaniu, zle sie to skonczy
 		System.out.println("ARGUMENTY LITERALU");
 		if(argumenty.size()!=0){
 			stala = false;
 		}
+		if(!stala)
+		{
+			this.nazwa = znajdzNazweBezArgumentow(nazwa);
+		}
 		for(Literal l: argumenty)
 		{
-			System.out.println(l.nazwa+ " " + argumenty.size() + " " + this.nazwa);
+			System.out.println(l.nazwa+ " " + argumenty.size() + " " + this.nazwa + " ");
 		}
 		System.out.println("KONIEC ARG LITERALU");
 	}
@@ -49,6 +53,7 @@ public
 			Literal nowy = new Literal(l.nazwa);
 			nowy.stala = l.stala;
 			this.argumenty.add(nowy);
+			System.out.println("PRZEPISYWANIE ARGUMENTOW "+ this.argumenty.toString());
 		}
 	}
 	
@@ -97,6 +102,10 @@ public
 		
 		
 		
+	}
+	
+	private String znajdzNazweBezArgumentow(String ss){
+		return ss.substring(0, ss.indexOf('('));
 	}
 	
 	static boolean sprawdzArgumenty(Literal literal1, Literal literal2){

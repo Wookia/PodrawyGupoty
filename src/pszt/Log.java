@@ -6,13 +6,12 @@ import java.util.List;
 public class Log {
 	private 
 		List<LogKlauzula> log;
-		LogKlauzula teza=null;	//to co robimy z tego arraylist?
 	public
 	Log(){
 		log = new ArrayList<LogKlauzula>();
 	}
-	void dodajKlauzule(Klauzula dziecko, boolean uzasad){
-		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(dziecko, uzasad));
+	void dodajKlauzule(Klauzula dziecko, boolean uzasad, boolean czyTeza){
+		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(dziecko, uzasad, czyTeza));
 	}
 	boolean czyIstniejeDziecko(Klauzula dziecko){
 		for(LogKlauzula logKlauzula: log){
@@ -21,34 +20,7 @@ public class Log {
 		return false;
 	}
 	void dodajKlauzule(Klauzula rodzic1, Klauzula rodzic2, Klauzula dziecko, int iteracja, boolean uzasad){
-		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(rodzic1, rodzic2, dziecko, iteracja, uzasad));
-	}
-	void piszDzifko(){
-		int i=-1;
-		for (LogKlauzula logKlauzula: log){
-			if(logKlauzula.getIter()!=i){
-				i=logKlauzula.getIter();
-				System.out.println("n="+i);
-			}
-			Klauzula rodzic1 = logKlauzula.getRodzic1();
-			Klauzula rodzic2 = logKlauzula.getRodzic2();
-			Klauzula dziecko = logKlauzula.getDziecko();
-			if (rodzic1!=null){
-				System.out.print("(");
-				piszKlauzule(rodzic1);
-				System.out.print("^");
-			}
-			if (rodzic2!=null){
-				piszKlauzule(rodzic2);
-				System.out.print(")");
-				System.out.print(" => ");
-			}
-			if (logKlauzula.equals(teza))System.out.print("TEZA: ");
-			if (dziecko!=null)piszKlauzule(dziecko);
-			System.out.println("");
-			
-		}
-		
+		if(!czyIstniejeDziecko(dziecko))log.add(new LogKlauzula(rodzic1, rodzic2, dziecko, iteracja, uzasad, false));
 	}
 	void piszKlauzule(Klauzula klauzula){
 		System.out.print("(");
@@ -67,11 +39,13 @@ public class Log {
 	}
 	void dodajBazê(BazaWiedzy baza, boolean zbior){
 		for(Klauzula klauzula: baza.getBaza()){
-			dodajKlauzule(klauzula, false);
+			dodajKlauzule(klauzula, false, false);
 		}
-		if(!zbior)this.teza = log.get(log.size()-1);
-		else this.teza=null;
-		//TODO pewnie bedzie trzeba przerobic, teza to wiecej niz jedna klauzula :/
+	}
+	void dodajTeze(BazaWiedzy baza, boolean zbior){
+		for(Klauzula klauzula: baza.getBaza()){
+			dodajKlauzule(klauzula, zbior, true);
+		}
 	}
 	ArrayList<Integer> iloscKlauzulNaIteracje(){
 		int n=0;
@@ -92,8 +66,7 @@ public class Log {
 		return log;
 	}
 	boolean czyTeza(LogKlauzula klauzula){
-		if(teza!=null && teza.equals(klauzula))return true;
-		return false;
+		return klauzula.czyTeza();
 	}
 	boolean czyUzasadnienie(Klauzula klauzula){
 		for(LogKlauzula klauz: log){
@@ -104,6 +77,7 @@ public class Log {
 	
 	ArrayList<Integer> dlugoscKlauzulNaIteracje(){
 		ArrayList<Integer> wynik = new ArrayList<Integer>();
+		boolean czyPierwsza = true;
 		for(LogKlauzula klauzula: log){
 			int numerIter = klauzula.getIter();
 			int rozmiar = wynik.size();
@@ -112,6 +86,11 @@ public class Log {
 					wynik.add(0);
 				}
 			}
+			if (czyPierwsza){
+				
+				czyPierwsza=false;
+			}
+			
 			wynik.set(numerIter, wynik.get(numerIter)+klauzula.getDziecko().getNazwa().length());
 		}
 		return wynik;

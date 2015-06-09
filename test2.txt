@@ -1,0 +1,4 @@
+K1: A(x)vB(x)v!C(x)
+K2: !A(M)
+K2: !B(M)
+TEZA: C(M)

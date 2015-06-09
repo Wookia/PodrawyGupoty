@@ -32,6 +32,9 @@ public class Parser{
 	
 	
 	boolean wybierzPlik(Stage stage) {
+		String userDirectoryString = System.getProperty("user.dir");
+		File userDirectory = new File(userDirectoryString);
+		fileChooser.setInitialDirectory(userDirectory);
 		file = fileChooser.showOpenDialog(stage);
 	     if (file != null) {
 	        return true;

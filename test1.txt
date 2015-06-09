@@ -1,0 +1,5 @@
+K1: !C(x)vW(x)
+K2: !C(x)vR(x)
+K3: C(A)
+K4: O(A)
+TEZA: !O(x)v!R(x)

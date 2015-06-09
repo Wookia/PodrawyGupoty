@@ -26,20 +26,6 @@ public
 		}
 		return false;
 	}
-	void czytajDzifko(){
-		int i=1;
-		for (Klauzula klauzula: bazaWiedzy){
-			System.out.println("K"+i);
-			for(Literal literal: klauzula.getLiteraly()){
-				if(literal.getNegacja()){
-					System.out.print("~");
-				}
-				System.out.print(literal.getNazwa()+" ");
-			}
-			System.out.print("\n");
-			i=i+1;
-		}
-	}
 	ArrayList<Klauzula> getBaza(){
 		return bazaWiedzy;
 	}

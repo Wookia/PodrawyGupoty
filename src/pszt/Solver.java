@@ -38,10 +38,11 @@ public class Solver {
 		Solver(BazaWiedzy bazaWiedzy){
 			this.bazaWiedzy = bazaWiedzy;
 		}
-		Log solveWszerz(ArrayList<String> teza){
-			bazaWiedzy.dodajKlauzule(teza);
+		Log solveWszerz(BazaWiedzy bazaTez){
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy, false);
+			log.dodajTeze(bazaTez, false);
+			bazaWiedzy.addMikroBaza(bazaTez.getBaza());
 			int i=1;
 			int size = bazaWiedzy.getBaza().size();
 			boolean stop = false;
@@ -57,12 +58,24 @@ public class Solver {
 								break;
 							}
 						}
-						else if(czyMerge(klauzula1, klauzula2) == 2){
-							
-							
-							// do zrobienia wstawienie podstawionej klauzuli
-							
-							
+						else if(czyMerge(klauzula1, klauzula2) == 2)
+						{
+							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
+							System.out.println("Probuje podstawic!");
+							if(klauzula != null && !bazaWiedzy.czyIstnieje(klauzula))
+							{
+								if(klauzula.czyFalsz())
+								{
+									stop=true;
+									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, false);
+									break;
+								}
+								else{
+									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, klauzula2, klauzula, i, false);
+								}
+							}
 						}
 					}
 				if(stop)break;
@@ -80,11 +93,12 @@ public class Solver {
 			}
 			return log;
 		}
-		Log solveLiniowe(ArrayList<String> teza){
-			bazaWiedzy.dodajKlauzule(teza);
-			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
+		Log solveLiniowe(BazaWiedzy bazaTez){
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy, false);
+			log.dodajTeze(bazaTez, false);
+			bazaWiedzy.addMikroBaza(bazaTez.getBaza());
+			Klauzula aktualna = bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1);
 			int size = bazaWiedzy.getBaza().size();
 			int i=1;
 			boolean stop = false;
@@ -104,8 +118,25 @@ public class Solver {
 						}
 						else if(czyMerge(klauzula1, aktualna) == 2)
 						{
-							
-							// do zrobienia wstawienie podstawionej klauzuli
+							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, aktualna);
+							System.out.println("Probuje podstawic!");
+							if(klauzula != null  && !bazaWiedzy.czyIstnieje(klauzula))
+							{
+								if(klauzula.czyFalsz())
+								{
+									stop=true;
+									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, aktualna, klauzula, i, false);
+									aktualna = klauzula;
+									break;
+								}
+								else{
+									mikroBaza.add(klauzula);
+									log.dodajKlauzule(klauzula1, aktualna, klauzula, i, false);
+									aktualna = klauzula;
+									break;
+								}
+							}
 							
 						}
 				if(stop)break;
@@ -124,16 +155,14 @@ public class Solver {
 			return log;
 		}
 		
-		Log solveZbiorUzasadnien(ArrayList<String> Teza)
-		{	
+		Log solveZbiorUzasadnien(BazaWiedzy bazaTez){
 			Log log = new Log();
-			log.dodajBazê(bazaWiedzy, true);
-			bazaWiedzy.dodajKlauzule(Teza);
-			log.dodajKlauzule(bazaWiedzy.getBaza().get(bazaWiedzy.getBaza().size()-1), true);
+			log.dodajBazê(bazaWiedzy, false);
+			log.dodajTeze(bazaTez, true);
 			boolean stop = false;
 			boolean niemozliwyDowod = false;
 			BazaWiedzy zbiorUzasadnien = new BazaWiedzy();
-			zbiorUzasadnien.dodajKlauzule(Teza);
+			zbiorUzasadnien.addMikroBaza(bazaTez.getBaza());
 			int i=1;
 			while(!bazaWiedzy.sprawdzSprzecznosc())
 			{
@@ -162,7 +191,7 @@ public class Solver {
 						{
 							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
 							System.out.println("Probuje podstawic!");
-							if(klauzula != null)
+							if(klauzula != null  && !bazaWiedzy.czyIstnieje(klauzula))
 							{
 								if(klauzula.czyFalsz())
 								{
@@ -212,7 +241,7 @@ public class Solver {
  		Log solveNajkrotsze(BazaWiedzy bazaTez){
 			Log log = new Log();
 			log.dodajBazê(bazaWiedzy, false);
-			log.dodajBazê(bazaTez,false);
+			log.dodajTeze(bazaTez, false);
 			bazaWiedzy.addMikroBaza(bazaTez.getBaza());//powinno dzialac chyba :D
 			int najkrotszeZlaczenie = 99999;
 			int i = 1;
@@ -238,18 +267,32 @@ public class Solver {
 						{
 							System.out.println("Probuje podstawic!");
 							Klauzula klauzula = Klauzula.wykonajPodstawienie(klauzula1, klauzula2);
-							if(klauzula != null)
+							if(klauzula != null && !bazaWiedzy.czyIstnieje(klauzula))
 							{
-								if(klauzula.getLiteraly().size()<najkrotszeZlaczenie){
-									toNajkrotszeZlaczenie = klauzula;
-									najkrotszeZlaczenie = klauzula.getLiteraly().size();
-									temp1 = klauzula1;
-									temp2 = klauzula2;
+								if(klauzula.czyFalsz())
+								{
+									if(klauzula.getLiteraly().size()<najkrotszeZlaczenie){
+										toNajkrotszeZlaczenie = klauzula;
+										najkrotszeZlaczenie = klauzula.getLiteraly().size();
+										temp1 = klauzula1;
+										temp2 = klauzula2;
+										stop=true;
+										break;
+									}
+								}
+								else{
+									if(klauzula.getLiteraly().size()<najkrotszeZlaczenie){
+										toNajkrotszeZlaczenie = klauzula;
+										najkrotszeZlaczenie = klauzula.getLiteraly().size();
+										temp1 = klauzula1;
+										temp2 = klauzula2;
+									}
 								}
 							}
 							
 						}
 					}
+					if(stop)break;
 				}
 				if(toNajkrotszeZlaczenie==null)
 					break;
@@ -260,6 +303,7 @@ public class Solver {
 				mikroBaza.add(toNajkrotszeZlaczenie);
 				log.dodajKlauzule(temp1, temp2, toNajkrotszeZlaczenie, i, false); //1 dla przypalu
 				bazaWiedzy.addMikroBaza(mikroBaza); //poczebne
+				if(mikroBaza.isEmpty())break;
 				mikroBaza.clear(); //poczebne
 				najkrotszeZlaczenie = 9999;
 				i=i+1;

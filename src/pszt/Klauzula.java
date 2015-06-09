@@ -157,12 +157,14 @@ public
 					nazwa=nazwa+argument.nazwa;
 					if(literal.getArgumenty().size()-1!=literal.getArgumenty().indexOf(argument))nazwa=nazwa+",";
 				}
+				
 				nazwa=nazwa+")";
 			}
 			if(literaly.size()-1!=literaly.indexOf(literal))nazwa=nazwa+"v";
 		}
 		nazwa=nazwa+")";
-		System.out.println("GETNAZWAA "+ nazwa );
+		System.out.println("GETNAZWAA " + nazwa);
+		
 		return nazwa;
 	}
 }

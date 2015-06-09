@@ -39,6 +39,8 @@ public
 		{
 			System.out.println(l.nazwa+ " " + argumenty.size() + " " + this.nazwa + " ");
 		}
+		if(!literalString.toLowerCase().equals(literalString))stala=true;
+		else stala=false;
 		System.out.println("KONIEC ARG LITERALU");
 	}
 	Literal(Literal literal)
@@ -57,6 +59,9 @@ public
 		}
 	}
 	
+	void aktNazwa(){
+		
+	}
 	
 	String getNazwa(){
 		return nazwa;
@@ -136,6 +141,7 @@ public
 
 		Literal tmpLiteral1 = new Literal(literal1);	//tworze kopie dla bezpieczenstwa oryginalnych danych
 		Literal tmpLiteral2 = new Literal(literal2);
+		
 		
 		
 		// czesc wykonujaca "do oporu" podstawienia stalych

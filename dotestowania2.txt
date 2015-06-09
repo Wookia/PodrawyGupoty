@@ -1,5 +1,5 @@
-K1: !AvBvC
-K2: !B(x,y)vD
+K1: !AvC
+K2: !B(W,Z)vD
 K3: !Cv!D
 K4: CvD
 K5: !CvE

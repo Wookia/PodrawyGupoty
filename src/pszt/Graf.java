@@ -8,8 +8,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,11 +26,15 @@ public class Graf {
 	Scene scene;
 	Pane pane;
 	Stage stage;
+	Widok widok;
+	ScrollPane scroll;
 	public
-	Graf(Scene scene, Pane pane, Stage stage){
+	Graf(Scene scene, Pane pane, Stage stage, Widok widok, ScrollPane scroll){
 		this.scene=scene;
 		this.pane=pane;
 		this.stage=stage;
+		this.widok=widok;
+		this.scroll=scroll;
 	}
 	void tworzGraf(Log log){
 		int iloscIter = 0;
@@ -38,13 +45,18 @@ public class Graf {
 			if(maxIloscKlauzul<i)maxIloscKlauzul=i;
 			iloscIter++;
 		}
-		stage.setHeight(iloscIter*100);
-		stage.setWidth(maxIloscKlauzul*80);
-		pane.getChildren().clear();
 		final ArrayList<GrafButton> listaKlauzul = new ArrayList<GrafButton>();
 		final ArrayList<Pair<Integer, GrafLine>> mapaLinii =  new ArrayList<Pair<Integer, GrafLine>>();
 		double max=log.maxWidth()*12+10*maxIloscKlauzul+100;
-		stage.setWidth(max);
+		pane.getChildren().clear();
+		if(max>1000)stage.setWidth(1000+10);
+		else stage.setWidth(max+10);
+		if(iloscIter*100>600)stage.setHeight(600+10);
+		else stage.setHeight(iloscIter*100+10);
+		scroll.setHbarPolicy(ScrollBarPolicy.ALWAYS);
+	 	scroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		pane.setPrefSize(max, iloscIter*100);
+		stage.centerOnScreen();
 		for(int i = 0; i<iloscIter; i++){
 			Text iter = new Text();
 			iter.setText("n = " + i);
@@ -56,7 +68,10 @@ public class Graf {
 			for(LogKlauzula klauzula: log.getLog()){
 				if(klauzula.getIter()==i){
 					final GrafButton klauz = new GrafButton();
-					if(log.czyTeza(klauzula))klauz.setKolor(Color.BLUE);
+					if(log.czyTeza(klauzula)){
+						klauz.setKolor(Color.BLUE);
+						if(klauzula.czyUzasadnien)klauz.setStyle("-fx-base: #b6e7c9;");
+					}
 					else if(klauzula.czyUzasadnien){
 						klauz.setStyle("-fx-base: #b6e7c9;");
 					}
@@ -135,5 +150,19 @@ public class Graf {
 			pane.getChildren().add(klauz);
 
 		}
+		Button btn6 = new Button();
+        btn6.setText("Wroc do wyboru");
+        btn6.setOnAction(new EventHandler<ActionEvent>() {
+ 
+            @Override
+            public void handle(ActionEvent event) {
+            	widok.wybierzMetode();
+            	scroll.setHbarPolicy(ScrollBarPolicy.NEVER);
+    		 	scroll.setVbarPolicy(ScrollBarPolicy.NEVER);
+            }
+        });
+        btn6.setTranslateX(max-125);
+        btn6.setTranslateY(iloscIter*100-70);
+        pane.getChildren().add(btn6);
 	}
 }
